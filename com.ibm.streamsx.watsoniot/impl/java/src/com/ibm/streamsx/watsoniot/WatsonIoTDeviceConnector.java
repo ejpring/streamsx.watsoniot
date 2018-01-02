@@ -109,6 +109,7 @@ class WatsonIoTCommandCallback implements CommandCallback, Runnable {
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Class for WatsonIoTDeviceConnector operator, which: 
@@ -197,7 +198,7 @@ public class WatsonIoTDeviceConnector extends AbstractOperator {
 	public String commandFormatAttribute = null;
 	
 	
-
+  // internal state variables or this operator
 	private OperatorContext context;
 	private Logger logger;
 	private DeviceClient client;
@@ -272,3 +273,5 @@ public class WatsonIoTDeviceConnector extends AbstractOperator {
         super.shutdown();
     }
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////

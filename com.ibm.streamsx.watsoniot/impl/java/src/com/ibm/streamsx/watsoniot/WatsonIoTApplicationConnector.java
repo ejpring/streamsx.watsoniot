@@ -126,38 +126,11 @@ class WatsonIoTEventCallback implements EventCallback, Runnable {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-
-
-
-
-
-
-/**
- * Class for an operator that receives a tuple and then optionally submits a tuple. 
- * This pattern supports one or more input streams and one or more output streams. 
- * <P>
- * The following event methods from the Operator interface can be called:
- * </p>
- * <ul>
- * <li><code>initialize()</code> to perform operator initialization</li>
- * <li>allPortsReady() notification indicates the operator's ports are ready to process and submit tuples</li> 
- * <li>process() handles a tuple arriving on an input port 
- * <li>processPuncuation() handles a punctuation mark arriving on an input port 
- * <li>shutdown() to shutdown the operator. A shutdown request may occur at any time, 
- * such as a request to stop a PE or cancel a job. 
- * Thus the shutdown() may occur while the operator is processing tuples, punctuation marks, 
- * or even during port ready notification.</li>
- * </ul>
- * <p>With the exception of operator initialization, all the other events may occur concurrently with each other, 
- * which lead to these methods being called concurrently by different threads.</p> 
- */
-
 /**
  * Class for WatsonIoTApplicationConnector operator, which: 
  * <ul>
  * <li>recieves tuples from upstream operators and sends them as commands to devices via the Watson IoT Platform</li>
- * <li>receives events from devices via the Watson IoT Platform and sends them downstream as tuples to other operators</li>
+ * <li>receives events from devices via the Watson IoT Platform and sends them downstream as tuples to other operators.</li>
  * </ul>
  */
 
@@ -296,7 +269,7 @@ public class WatsonIoTApplicationConnector extends AbstractOperator {
 	public void setEventDeviceId(String attribute) { this.eventDeviceIdAttribute = attribute; }
 	public String eventDeviceIdAttribute = null;
 	
-	
+  // internal state variables or this operator	
 	private OperatorContext context;
 	private Logger logger;
 	private ApplicationClient client;
