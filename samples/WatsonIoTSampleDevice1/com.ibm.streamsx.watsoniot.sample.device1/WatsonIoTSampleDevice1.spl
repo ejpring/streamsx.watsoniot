@@ -1,0 +1,67 @@
+// Copyright (C) 2017  International Business Machines Corporation
+// All Rights Reserved
+
+namespace com.ibm.streamsx.watsoniot.sample.device1;
+
+use com.ibm.streamsx.json::*;
+use com.ibm.streamsx.watsoniot::*;
+
+@threading(model=manual)
+composite WatsonIoTSampleDevice1 {
+
+  param
+    expression<rstring> $deviceCredentials: getSubmissionTimeValue("deviceCredentials"); 
+    expression<float64> $eventInterval: 1.0; // in seconds
+
+  type
+
+  EventTupleType =
+    rstring aString,
+    uint64 anInteger,
+    float64 aFloat,
+    list<float64> aList,
+    map<rstring,int32> aMap;
+
+  CommandTupleType =
+    rstring aString,
+    uint64 anInteger,
+    float64 aFloat;
+
+  graph
+
+    // generate sample events
+    stream<EventTupleType> EventTupleStream = Beacon() {
+      param period: $eventInterval;
+      output EventTupleStream: 
+        aString = "this is sample event number " + (rstring)IterationCount(),
+        anInteger = IterationCount(),
+        aFloat = getTimestampInSecs(),
+        aList = [ 1.41421, 2.71828, 3.14159 ],
+        aMap = { "one": 1, "two": 2, "three": 3, "many": 2147483647 }; }
+  	() as EventTupleConsole = Custom(EventTupleStream as In) { logic onTuple In: { printStringLn("event tuple: " + (rstring)EventTupleStream); } }
+
+    // encode tuples into events for Watson IoT Platform
+    stream<rstring event, rstring jsonString> DeviceEventStream = Functor(EventTupleStream) {
+      output DeviceEventStream: 
+        event = "sampleEvent",
+        jsonString = tupleToJSON(EventTupleStream); } 
+  	() as DeviceEventConsole = Custom(DeviceEventStream as In) { logic onTuple In: { printStringLn(">>>>> sending device event: " + (rstring)DeviceEventStream); } }
+
+    // send events to Watson IoT Platform and receive commands from it
+    stream<rstring command, rstring jsonString> ApplicationCommandStream = WatsonIoTDeviceConnector(DeviceEventStream) {
+      param
+      eventName: event;
+      eventData: jsonString;
+      commandName: "command";
+      commandData: "jsonString";
+      deviceCredentials: $deviceCredentials; }
+  	() as ApplicationCommandConsole = Custom(ApplicationCommandStream as In) { logic onTuple In: { printStringLn("<<<<< received application command: " + (rstring)ApplicationCommandStream); } }
+
+    // decode commands received from Watson IoT Platform into tuples
+    stream<rstring command, CommandTupleType data> CommandTupleStream = JSONToTuple(ApplicationCommandStream) {
+    param
+    inputAttribute: jsonString; 
+    targetAttribute: "data"; }       
+  	() as CommandTupleConsole = Custom(CommandTupleStream as In) { logic onTuple In: { printStringLn("command tuple: " + (rstring)CommandTupleStream); } }
+
+}
