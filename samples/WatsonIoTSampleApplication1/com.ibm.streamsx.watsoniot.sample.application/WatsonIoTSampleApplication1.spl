@@ -1,7 +1,7 @@
 // Copyright (C) 2017  International Business Machines Corporation
 // All Rights Reserved
 
-namespace com.ibm.streamsx.watsoniot.sample.application1;
+namespace com.ibm.streamsx.watsoniot.sample.application;
 
 use com.ibm.streamsx.json::*;
 use com.ibm.streamsx.watsoniot::*;
@@ -11,9 +11,10 @@ composite WatsonIoTSampleApplication1 {
 
   param
     expression<rstring> $applicationCredentials: getSubmissionTimeValue("applicationCredentials"); 
+    expression<rstring> $sampleDeviceType: getSubmissionTimeValue("deviceType");
+    expression<rstring> $sampleDeviceId: getSubmissionTimeValue("deviceId");
+    expression<list<rstring>> $sampleDeviceIds: getSubmissionTimeListValue("deviceIds");
     expression<float64> $commandInterval: 10.0; // in seconds
-    expression<rstring> $sampleDeviceType: "MySampleType";
-    expression<rstring> $sampleDeviceId: "MySampleDeviceA";
 
   type
 
@@ -41,12 +42,15 @@ composite WatsonIoTSampleApplication1 {
   	() as CommandTupleConsole = Custom(CommandTupleStream as In) { logic onTuple In: { printStringLn("command tuple: " + (rstring)CommandTupleStream); } }
 
     // encode tuples into commands for Watson IoT Platform
-    stream<rstring command, rstring deviceType, rstring deviceId, rstring jsonString> ApplicationCommandStream = Functor(CommandTupleStream) {
-      output ApplicationCommandStream: 
-        command = "sampleCommand",
-        deviceType = $sampleDeviceType,
-        deviceId = $sampleDeviceId,
-        jsonString = tupleToJSON(CommandTupleStream); } 
+    stream<rstring command, rstring deviceType, rstring deviceId, rstring jsonString> ApplicationCommandStream = Custom(CommandTupleStream) {
+      logic onTuple CommandTupleStream: {
+        for (rstring deviceId in $sampleDeviceIds) { 
+        submit( { command = "sampleCommand",
+                  deviceType = $sampleDeviceType,
+                  deviceId = deviceId,
+                  jsonString = tupleToJSON(CommandTupleStream) }, 
+                ApplicationCommandStream );
+        } } }
   	() as DeviceCommandConsole = Custom(ApplicationCommandStream as In) { logic onTuple In: { printStringLn(">>>>> sending application command: " + (rstring)ApplicationCommandStream); } }
 
     // send encoded commands to Watson IoT Platform and receive encoded events from it

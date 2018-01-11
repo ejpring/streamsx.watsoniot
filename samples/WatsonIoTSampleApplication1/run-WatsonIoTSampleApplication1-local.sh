@@ -8,15 +8,16 @@
 #set -o xtrace
 #set -o pipefail
 
-namespace=com.ibm.streamsx.watsoniot.sample.application1
+namespace=com.ibm.streamsx.watsoniot.sample.application
 composite=WatsonIoTSampleApplication1
 
 here=$( cd ${0%/*} ; pwd )
 
-applicationCredentials=$here/WatsonIoTSampleApplication.credentials
-
 submitParameterList=( 
-    applicationCredentials=$applicationCredentials
+    deviceType=SampleDeviceType
+    deviceId=SampleDevice1
+    deviceIds=SampleDevice1,SampleDevice2
+    applicationCredentials=$here/WatsonIoTSampleApplication1.credentials
 )
 
 traceLevel=3 # ... 0 for off, 1 for error, 2 for warn, 3 for info, 4 for debug, 5 for trace

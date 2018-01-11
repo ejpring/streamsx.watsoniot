@@ -16,9 +16,9 @@ toolkitDirectory=$HOME/StreamsToolkits
 
 applicationDirectory=$here
 
-applicationNamespace=com.ibm.streamsx.watsoniot.sample.device1
+applicationNamespace=com.ibm.streamsx.watsoniot.sample.device
 
-applicationComposite=WatsonIoTSampleDevice1
+applicationComposite=SampleWatsonIoTDeviceSourceAndSink
 
 applicationCompileTimeParameterList=(
 )

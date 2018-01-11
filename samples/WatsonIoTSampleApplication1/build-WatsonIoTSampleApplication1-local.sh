@@ -16,7 +16,7 @@ toolkitDirectory=$HOME/StreamsToolkits
 
 applicationDirectory=$here
 
-applicationNamespace=com.ibm.streamsx.watsoniot.sample.application1
+applicationNamespace=com.ibm.streamsx.watsoniot.sample.application
 
 applicationComposite=WatsonIoTSampleApplication1
 
