@@ -52,7 +52,6 @@ public class WatsonIoTApplicationSink extends AbstractOperator {
 	
   @Parameter ( name="applicationCredentials", 
                optional=false, 
-               //cardinality=1, 
                description="the name of a file containing Watson IoT Platform application credentials" )
     public void setApplicationCredentials(String filename) { 
       this.applicationCredentialsFilename = filename;
@@ -62,42 +61,36 @@ public class WatsonIoTApplicationSink extends AbstractOperator {
   
 	@Parameter ( name="commandName", 
                  optional=false, 
-                 //cardinality=1, 
                  description="an input attribute that will be sent to the Watson IoT Platform as the command name" )
     public void setCommandName(TupleAttribute<Tuple,String> attribute) { this.commandNameAttribute = attribute; }
 	private TupleAttribute<Tuple,String> commandNameAttribute; 
 
 	@Parameter ( name="commandData", 
                  optional=false, 
-                 //cardinality=1, 
                  description="an input attribute of type 'rstring' that will be sent to the Watson IoT Platform as command data" )
 	public void setCommandData(TupleAttribute<Tuple,String> attribute) { this.commandDataAttribute = attribute; }
 	private TupleAttribute<Tuple,String> commandDataAttribute; 
 
 	@Parameter ( name="commandFormat", 
                  optional=true, 
-                 //cardinality=1, 
                  description="an input attribute of type 'rstring' that specifies the format of the data sent to the Watson IoT Platform, defaulting to 'json' if not specified" )
 	public void setCommandFormat(TupleAttribute<Tuple,String> attribute) { this.commandFormatAttribute = attribute; }
 	private TupleAttribute<Tuple,String> commandFormatAttribute = null;
 
 	@Parameter ( name="commandQOS", 
                  optional=true, 
-                 //cardinality=1, 
                  description="the 'quality of service' for commmands sent to the Watson IoT Platform, either '0' or '1' or '2', defaulting to '2' if not specified" ) 
 	public void setCommandQOS(int value) { this.commandQOS = value; }
 	private int commandQOS = 2;
 
 	@Parameter ( name="commandDeviceType", 
                  optional=false, 
-                 //cardinality=1, 
                  description="an input attribute of type 'rstring' that specifies the type of device the Watson IoT Platform should send the command to, defaulting to '??????????' if not specified" )
 	public void setCommandDeviceType(TupleAttribute<Tuple,String> attribute) { this.commandDeviceTypeAttribute = attribute; }
 	private TupleAttribute<Tuple,String> commandDeviceTypeAttribute;
 
 	@Parameter ( name="commandDeviceId", 
                  optional=false, 
-                 //cardinality=1, 
                  description="an input attribute of type 'rstring' that identfies the device the Watson IoT Platform should send the command to, defaulting to '??????????' if not specified" )
 	public void setCommandDeviceId(TupleAttribute<Tuple,String> attribute) { this.commandDeviceIdAttribute = attribute; }
 	private TupleAttribute<Tuple,String> commandDeviceIdAttribute;

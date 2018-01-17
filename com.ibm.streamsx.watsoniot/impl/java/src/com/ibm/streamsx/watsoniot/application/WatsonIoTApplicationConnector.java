@@ -189,105 +189,90 @@ public class WatsonIoTApplicationConnector extends AbstractOperator {
   
 	@Parameter ( name="commandName", 
                  optional=false, 
-                 //cardinality=1, 
                  description="an input attribute that will be sent to the Watson IoT Platform as the command name" )
     public void setCommandName(TupleAttribute<Tuple,String> attribute) { this.commandNameAttribute = attribute; }
 	private TupleAttribute<Tuple,String> commandNameAttribute; 
 
 	@Parameter ( name="commandData", 
                  optional=false, 
-                 //cardinality=1, 
                  description="an input attribute of type 'rstring' that will be sent to the Watson IoT Platform as command data" )
 	public void setCommandData(TupleAttribute<Tuple,String> attribute) { this.commandDataAttribute = attribute; }
 	private TupleAttribute<Tuple,String> commandDataAttribute; 
 
 	@Parameter ( name="commandFormat", 
                  optional=true, 
-                 //cardinality=1, 
                  description="an input attribute of type 'rstring' that specifies the format of the data sent to the Watson IoT Platform, defaulting to 'json' if not specified" )
 	public void setCommandFormat(TupleAttribute<Tuple,String> attribute) { this.commandFormatAttribute = attribute; }
 	private TupleAttribute<Tuple,String> commandFormatAttribute = null;
 
 	@Parameter ( name="commandQOS", 
                  optional=true, 
-                 //cardinality=1, 
                  description="the 'quality of service' for commmands sent to the Watson IoT Platform, either '0' or '1' or '2', defaulting to '2' if not specified" ) 
 	public void setCommandQOS(int value) { this.commandQOS = value; }
 	private int commandQOS = 2;
 
 	@Parameter ( name="commandDeviceType", 
                  optional=false, 
-                 //cardinality=1, 
                  description="an input attribute of type 'rstring' that specifies the type of device the Watson IoT Platform should send the command to, defaulting to '??????????' if not specified" )
 	public void setCommandDeviceType(TupleAttribute<Tuple,String> attribute) { this.commandDeviceTypeAttribute = attribute; }
 	private TupleAttribute<Tuple,String> commandDeviceTypeAttribute;
 
 	@Parameter ( name="commandDeviceId", 
                  optional=false, 
-                 //cardinality=1, 
                  description="an input attribute of type 'rstring' that identfies the device the Watson IoT Platform should send the command to, defaulting to '??????????' if not specified" )
 	public void setCommandDeviceId(TupleAttribute<Tuple,String> attribute) { this.commandDeviceIdAttribute = attribute; }
 	private TupleAttribute<Tuple,String> commandDeviceIdAttribute;
 
   @Parameter ( name="subscriptionDeviceTypes", 
                optional=true, 
-               //cardinality=1, 
                description="output tuples will be produced from events received from these device types, defaulting to '+', meaning all device types" )
   public void setSubscriptionDeviceTypes(String[] subscriptions) { subscriptionDeviceTypes = subscriptions; }
   private String[] subscriptionDeviceTypes = { "+" };
 
   @Parameter ( name="subscriptionDeviceIds", 
                optional=true, 
-               //cardinality=1, 
                description="output tuples will be produced from events received from these devices, defaulting to '+', meaning all devices" )
   public void setSubscriptionDeviceIds(String[] subscriptions) { subscriptionDeviceIds = subscriptions; }
   private String[] subscriptionDeviceIds = { "+" };
 
   @Parameter ( name="subscriptionEvents", 
                optional=true, 
-               //cardinality=1, 
                description="output tuples will be produced from these events, defaulting to '+', meaning all events" )
   public void setSubscriptionEvents(String[] subscriptions) { subscriptionEvents = subscriptions; }
   private String[] subscriptionEvents = { "+" };
 
   @Parameter ( name="subscriptionFormats", 
                optional=true, 
-               //cardinality=1, 
                description="output tuples will be produced from events received in these formats, defaulting to '+', meaning all formats" )
   public void setSubscriptionFormats(String[] subscriptions) { subscriptionFormats = subscriptions; }
   private String[] subscriptionFormats = { "+" };
 
 	@Parameter ( name="eventName", 
                  optional=false, 
-                 //cardinality=1, 
                  description="an output attribute of type 'rstring' for the name of the event recieved from a device via the Watson IoT Platform" )
 	public void setEventName(String attribute) { this.eventNameAttribute = attribute; }
 	public String eventNameAttribute;
 	
 	@Parameter ( name="eventData", 
                  optional=false, 
-                 //cardinality=1, 
                  description="an output attribute of type 'rstring' for data recieved with an event from a device via the Watson IoT Platform" )
 	public void setEventData(String attribute) { this.eventDataAttribute = attribute; }
 	public String eventDataAttribute;
 	
 	@Parameter ( name="eventFormat", 
                  optional=true, 
-                 //cardinality=1, 
                  description="optionally, an output attribute of type 'rstring' for the format of the data recieved with an event from a device via the Watson IoT Platform, with no default" )
 	public void setEventFormat(String attribute) { this.eventFormatAttribute = attribute; }
 	public String eventFormatAttribute = null;
 
 	@Parameter ( name="eventDeviceType", 
                  optional=true, 
-                 //cardinality=1, 
                  description="optionally, an output attribute of type 'rstring' for the type of the device that sent the event recieved via the Watson IoT Platform, with no default" )
 	public void setEventDeviceType(String attribute) { this.eventDeviceTypeAttribute = attribute; }
 	public String eventDeviceTypeAttribute = null;
 	
 	@Parameter ( name="eventDeviceId", 
                  optional=true, 
-                 //cardinality=1, 
                  description="optionally, an output attribute of type 'rstring' for the identifier of the device that sent the event received from the Watson IoT Platform, with no default" )
 	public void setEventDeviceId(String attribute) { this.eventDeviceIdAttribute = attribute; }
 	public String eventDeviceIdAttribute = null;

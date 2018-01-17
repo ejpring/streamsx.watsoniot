@@ -165,7 +165,6 @@ public class WatsonIoTDeviceConnector extends AbstractOperator {
 	
 	@Parameter ( name="deviceCredentials", 
                  optional=false, 
-                 /////////////cardinality=1, 
                  description="the name of a file containing Watson IoT Platform device credentials" )
     public void setDeviceCredentials(String filename) { 
       this.deviceCredentialsFilename = filename;
@@ -175,49 +174,42 @@ public class WatsonIoTDeviceConnector extends AbstractOperator {
 
 	@Parameter ( name="eventName", 
                  optional=false, 
-                 //cardinality=1, 
                  description="an input attribute that will be sent to the Watson IoT Platform as the event name" )
 	public void setEventName(TupleAttribute<Tuple,String> attribute) { this.eventNameAttribute = attribute; }
 	private TupleAttribute<Tuple,String> eventNameAttribute; 
 
 	@Parameter ( name="eventData", 
                  optional=false, 
-                 //cardinality=1, 
                  description="an input attribute of type 'rstring' that will be sent to the Watson IoT Platform as event data" )
 	public void setEventData(TupleAttribute<Tuple,String> attribute) { this.eventDataAttribute = attribute; }
 	private TupleAttribute<Tuple,String> eventDataAttribute; 
 
 	@Parameter ( name="eventFormat", 
                  optional=true, 
-                 //cardinality=1, 
                  description="an input attribute of type 'rstring' that specifies the format of the data sent to the Watson IoT Platform, defaulting to 'json' if not specified" )
 	public void setEventFormat(TupleAttribute<Tuple,String> attribute) { this.eventFormatAttribute = attribute; }
 	private TupleAttribute<Tuple,String> eventFormatAttribute = null;
 	
 	@Parameter ( name="eventQOS", 
                  optional=true, 
-                 //cardinality=1, 
                  description="the 'quality of service' for events sent to the Watson IoT Platform, either '0' or '1' or '2', defaulting to '0' if not specified" ) 
 	public void setEventQOS(int value) { this.eventQOS = value; }
 	private int eventQOS = 0;
 	
 	@Parameter ( name="commandName", 
                  optional=false, 
-                 //cardinality=1, 
                  description="an output attribute of type 'rstring' for the name of the command recieved from the Watson IoT Platform" )
 	public void setCommandName(String attribute) { this.commandNameAttribute = attribute; }
 	public String commandNameAttribute;
 	
 	@Parameter ( name="commandData", 
                  optional=false, 
-                 //cardinality=1, 
                  description="an output attribute of type 'rstring' or 'blob' for data recieved from the Watson IoT Platform with a command" )
 	public void setCommandData(String attribute) { this.commandDataAttribute = attribute; }
 	public String commandDataAttribute;
 	
 	@Parameter ( name="comandFormat", 
                  optional=true, 
-                 //cardinality=1, 
                  description="optionally, an output attribute of type 'rstring' for the format of the data recieved from the Watson IoT Platform with a command, with no default" )
 	public void setCommandFormat(String attribute) { this.commandFormatAttribute = attribute; }
 	public String commandFormatAttribute = null;
