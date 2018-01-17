@@ -154,6 +154,7 @@ public class WatsonIoTApplicationClient extends ApplicationClient implements Wat
       logger.debug("WatsonIoTApplicationClient.takeEvent() returning object of type " + eventClass.getName() + " containing " + object);
       return object; 
     } 
+    catch (InterruptedException e) {} // ignore this exception 
     catch (Exception e) { logger.error("WatsonIoTApplicationClient.takeEvent() caught exception " + e); } 
 
     return null;

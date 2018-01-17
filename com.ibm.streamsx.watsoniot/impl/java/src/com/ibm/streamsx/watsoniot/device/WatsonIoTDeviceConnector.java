@@ -97,6 +97,8 @@ class WatsonIoTDeviceConnectorProcess implements Runnable {
     while (running) {
       try {
         Command command = queue.take();
+        if (command==null) continue;
+
         String name = command.getCommand();
         String format = command.getFormat();
         String data = new String(command.getRawPayload());
@@ -109,7 +111,7 @@ class WatsonIoTDeviceConnectorProcess implements Runnable {
         if (operator.commandFormatAttribute!=null) outputTuple.setString(operator.commandFormatAttribute, format);
         outputStream.submit(outputTuple);
       } 
-      catch (InterruptedException e) { logger.error("WatsonIoTDeviceConnectorProcess caught InterruptedException: " + e); }
+      catch (InterruptedException e) {} // ignore this exception
       catch (Exception e) { logger.error("WatsonIoTDeviceConnectorProcess caught Exception: " + e); }	
     }
     

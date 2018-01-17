@@ -149,6 +149,7 @@ public class WatsonIoTDeviceClient extends DeviceClient implements WatsonIoTDevi
       logger.debug("WatsonIoTDeviceClient.takeCommand() returning object of type " + commandClass.getName() + " containing " + object);
       return object; 
     } 
+    catch (InterruptedException e) {} // ignore this exception 
     catch (Exception e) { logger.error("WatsonIoTDeviceClient.takeCommand() caught exception " + e); } 
 
     return null;

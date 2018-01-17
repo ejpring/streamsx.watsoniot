@@ -77,6 +77,7 @@ class WatsonIoTDeviceSourceProcess implements Runnable {
       try {
         logger.debug("WatsonIoTDeviceSourceProcess.run() waiting for event ...");
         WatsonIoTDeviceSourceCommand command = (WatsonIoTDeviceSourceCommand)client.takeCommand(WatsonIoTDeviceSourceCommand.class); 
+        if (command==null) continue;
         logger.debug("WatsonIoTDeviceSourceProcess.run() proceeding with " + command);
 
         StreamingOutput<OutputTuple> outputStream = operator.getOperatorContext().getStreamingOutputs().get(0);

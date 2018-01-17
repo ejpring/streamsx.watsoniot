@@ -106,6 +106,8 @@ class WatsonIoTApplicationConnectorProcess implements Runnable {
     while (running) {
       try {
         Event event = queue.take();
+        if (event==null) continue;
+
         String name = event.getEvent();
         String format = event.getFormat();
         String data = new String(event.getRawPayload());
@@ -122,7 +124,7 @@ class WatsonIoTApplicationConnectorProcess implements Runnable {
         if (operator.eventDeviceIdAttribute!=null) outputTuple.setString(operator.eventDeviceIdAttribute, deviceId);
         outputStream.submit(outputTuple);
       } 
-      catch (InterruptedException e) { logger.error("WatsonIoTApplicationConnectorProcess caught exception " + e); }
+      catch (InterruptedException e) {} // ignore this exception
       catch (Exception e) { logger.error("WatsonIoTApplicationConnectorProcess caught exception  " + e); }	
     }
     
