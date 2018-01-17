@@ -15,6 +15,8 @@ here=$( cd ${0%/*} ; pwd )
 
 submitParameterList=( 
     deviceCredentials=$here/WatsonIoTSampleDevice1.credentials
+    eventInterval=1
+    timeoutInterval=60
 )
 
 traceLevel=3 # ... 0 for off, 1 for error, 2 for warn, 3 for info, 4 for debug, 5 for trace

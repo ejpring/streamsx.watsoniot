@@ -18,6 +18,11 @@ jars=(
     $( find $here/opt -name "*.jar" ) 
 )
 
+compilerOptions=(
+    -Xdiags:verbose
+    -Xlint:unchecked
+)
+
 sources=( $( find $here/impl/java/src -name "*.java" ) )
 
 classDirectory="$here/impl/java/bin"
@@ -34,7 +39,7 @@ which spl-make-toolkit || die "sorry, could not find Streams tooling, $?"
 step "compiling Java source files ..."
 classpath=$( IFS=$':' ; echo -e "${jars[*]}" )
 [[ -d $classDirectory ]] || mkdir -p $classDirectory || die "sorry, could not create directory $classDirectory, $?"
-javac ${sources[*]} -classpath $classpath -d $classDirectory || die "sorry, could not compile Java source files, $?"
+javac ${compilerOptions[*]} ${sources[*]} -classpath $classpath -d $classDirectory || die "sorry, could not compile Java source files, $?"
 
 step "indexing Java toolkit ..."
 spl-make-toolkit -i $here || die "sorry, could not index Streams toolkit, $?"

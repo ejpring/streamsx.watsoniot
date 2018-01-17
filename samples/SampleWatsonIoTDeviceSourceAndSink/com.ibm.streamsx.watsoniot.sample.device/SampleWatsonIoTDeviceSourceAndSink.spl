@@ -4,14 +4,15 @@
 namespace com.ibm.streamsx.watsoniot.sample.device;
 
 use com.ibm.streamsx.json::*;
-use com.ibm.streamsx.watsoniot::*;
+use com.ibm.streamsx.watsoniot.device::*;
 
 @threading(model=manual)
 composite SampleWatsonIoTDeviceSourceAndSink {
 
   param
     expression<rstring> $deviceCredentials: getSubmissionTimeValue("deviceCredentials"); 
-    expression<float64> $eventInterval: 1.0; // in seconds
+    expression<float64> $eventInterval: (float64)getSubmissionTimeValue("eventInterval", "1.0"); // in seconds
+    expression<float64> $timeoutInterval: (float64)getSubmissionTimeValue("timeoutInterval", "60.0" ); // in seconds
 
   type
 
@@ -74,5 +75,7 @@ composite SampleWatsonIoTDeviceSourceAndSink {
   	() as CommandTupleConsole = Custom(CommandTupleStream as In) { logic onTuple In: { printStringLn("command tuple: " + (rstring)CommandTupleStream); } }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    () as Timeout = Custom() { logic onProcess: { block($timeoutInterval); shutdownPE(); } }
 
 }

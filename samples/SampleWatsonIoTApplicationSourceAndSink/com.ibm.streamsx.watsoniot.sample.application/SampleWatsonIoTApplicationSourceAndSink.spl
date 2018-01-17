@@ -1,0 +1,92 @@
+// Copyright (C) 2017  International Business Machines Corporation
+// All Rights Reserved
+
+namespace com.ibm.streamsx.watsoniot.sample.application;
+
+use com.ibm.streamsx.json::*;
+use com.ibm.streamsx.watsoniot.application::*;
+
+@threading(model=manual)
+composite SampleWatsonIoTApplicationSourceAndSink {
+
+  param
+    expression<rstring> $applicationCredentials: getSubmissionTimeValue("applicationCredentials"); 
+    expression<rstring> $sampleDeviceType: getSubmissionTimeValue("deviceType");
+    expression<list<rstring>> $sampleDeviceIds: getSubmissionTimeListValue("deviceIds");
+    expression<float64> $commandInterval: (float64)getSubmissionTimeValue("commandInterval", "10.0" ); // in seconds
+    expression<float64> $timeoutInterval: (float64)getSubmissionTimeValue("timeoutInterval", "60.0" ); // in seconds
+
+  type
+
+  EventTupleType =
+    rstring aString,
+    uint64 anInteger,
+    float64 aFloat,
+    list<float64> aList,
+    map<rstring,int32> aMap;
+
+  CommandTupleType =
+    rstring aString,
+    uint64 anInteger,
+    float64 aFloat;
+
+  graph
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    // generate sample commands
+    stream<CommandTupleType> CommandTupleStream = Beacon() {
+      param period: $commandInterval;
+      output CommandTupleStream: 
+        aString = "this is sample command number " + (rstring)IterationCount(),
+        anInteger = IterationCount(),
+        aFloat = getTimestampInSecs(); }
+  	() as CommandTupleConsole = Custom(CommandTupleStream as In) { logic onTuple In: { printStringLn("command tuple: " + (rstring)CommandTupleStream); } }
+
+    // encode tuples into commands for Watson IoT Platform
+    stream<rstring command, rstring deviceType, rstring deviceId, rstring jsonString> ApplicationCommandStream = Custom(CommandTupleStream) {
+      logic onTuple CommandTupleStream: {
+        for (rstring deviceId in $sampleDeviceIds) { 
+        submit( { command = "sampleCommand",
+                  deviceType = $sampleDeviceType,
+                  deviceId = deviceId,
+                  jsonString = tupleToJSON(CommandTupleStream) },
+                ApplicationCommandStream );
+        } } }
+  	() as DeviceCommandConsole = Custom(ApplicationCommandStream as In) { logic onTuple In: { printStringLn(">>>>> sending application command: " + (rstring)ApplicationCommandStream); } }
+
+    // send encoded commands to Watson IoT Platform 
+    () as ApplicationCommandSink = WatsonIoTApplicationSink(ApplicationCommandStream) {
+      param
+      commandName: command;
+      commandDeviceType: deviceType;
+      commandDeviceId: deviceId;
+      commandData: jsonString;
+      applicationCredentials: $applicationCredentials; }
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    // receive encoded events from Watson IoT Platform
+    stream<rstring event, rstring deviceType, rstring deviceId, rstring jsonString> DeviceEventStream = WatsonIoTApplicationSource() {
+      param
+      subscriptionDeviceTypes: $sampleDeviceType;
+      subscriptionFormats: "json";
+      eventName: "event";
+      eventDeviceType: "deviceType";
+      eventDeviceId: "deviceId";
+      eventData: "jsonString";
+      applicationCredentials: $applicationCredentials; }
+  	() as DeviceEventConsole = Custom(DeviceEventStream as In) { logic onTuple In: { printStringLn("<<<<< received device event: " + (rstring)DeviceEventStream); } }
+
+    // decode events received from Watson IoT Platform into tuples
+    stream<rstring event, rstring deviceType, rstring deviceId, EventTupleType data> EventTupleStream = JSONToTuple(DeviceEventStream) {
+    param
+    inputAttribute: jsonString; 
+    targetAttribute: "data"; }       
+  	() as EventTupleConsole = Custom(EventTupleStream as In) { logic onTuple In: { printStringLn("event tuple: " + (rstring)EventTupleStream); } }
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    () as Timeout = Custom() { logic onProcess: { block($timeoutInterval); shutdownPE(); } }
+
+}
