@@ -51,8 +51,11 @@ import org.apache.log4j.Logger;
 	@Parameter ( name="deviceCredentials", 
                  optional=false, 
                  description="the name of a file containing Watson IoT Platform device credentials" )
-	public void setDeviceCredentials(String filename) { this.deviceCredentials = DeviceClient.parsePropertiesFile(new File(filename)); }
-	private Properties deviceCredentials;
+    public void setDeviceCredentials(String filename) { 
+      this.deviceCredentialsFilename = filename;
+      this.deviceCredentials = DeviceClient.parsePropertiesFile(new File(filename)); }
+    private String deviceCredentialsFilename;
+    private Properties deviceCredentials;
 
 	@Parameter ( name="eventName", 
                  optional=false, 
@@ -107,7 +110,7 @@ import org.apache.log4j.Logger;
         logger.debug("WatsonIoTDeviceSink.allPortsReady() started");
 
         if (!client.isConnected()) {
-          logger.info("WatsonIoTDeviceSink connecting to Watson IoT Platform");
+          logger.info("WatsonIoTDeviceSink connecting to Watson IoT Platform with credentials from " + deviceCredentialsFilename);
           client.connect(); 
           if (!client.isConnected()) logger.error("WatsonIoTDeviceSink failed to connect"); }
 

@@ -54,8 +54,11 @@ public class WatsonIoTApplicationSink extends AbstractOperator {
                optional=false, 
                //cardinality=1, 
                description="the name of a file containing Watson IoT Platform application credentials" )
-  public void setApplicationCredentials(String filename) { this.applicationCredentials = ApplicationClient.parsePropertiesFile(new File(filename)); }
-  private Properties applicationCredentials;
+    public void setApplicationCredentials(String filename) { 
+      this.applicationCredentialsFilename = filename;
+      this.applicationCredentials = ApplicationClient.parsePropertiesFile(new File(filename)); }
+    private String applicationCredentialsFilename;
+    private Properties applicationCredentials;
   
 	@Parameter ( name="commandName", 
                  optional=false, 
@@ -128,7 +131,7 @@ public class WatsonIoTApplicationSink extends AbstractOperator {
         logger.debug("WatsonIoTApplicationSink.allPortsReady() started");
 
         if (!client.isConnected()) {
-          logger.info("WatsonIoTApplicationSink connecting to Watson IoT Platform");
+          logger.info("WatsonIoTApplicationSink connecting to Watson IoT Platform with credentials from " + applicationCredentialsFilename);
           client.connect(); 
           if (!client.isConnected()) logger.error("WatsonIoTApplicationSink failed to connect"); }
 

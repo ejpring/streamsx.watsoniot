@@ -165,8 +165,11 @@ public class WatsonIoTDeviceConnector extends AbstractOperator {
                  optional=false, 
                  /////////////cardinality=1, 
                  description="the name of a file containing Watson IoT Platform device credentials" )
-	public void setDeviceCredentials(String filename) { this.deviceCredentials = DeviceClient.parsePropertiesFile(new File(filename)); }
-	private Properties deviceCredentials;
+    public void setDeviceCredentials(String filename) { 
+      this.deviceCredentialsFilename = filename;
+      this.deviceCredentials = DeviceClient.parsePropertiesFile(new File(filename)); }
+    private String deviceCredentialsFilename;
+    private Properties deviceCredentials;
 
 	@Parameter ( name="eventName", 
                  optional=false, 
@@ -280,7 +283,7 @@ public class WatsonIoTDeviceConnector extends AbstractOperator {
         if (thread!=null) thread.start();
 
         if (!client.isConnected()) {
-          logger.info("WatsonIoTDeviceConnector connecting to Watson IoT Platform");
+          logger.info("WatsonIoTDeviceConnector connecting to Watson IoT Platform with credentials from " + deviceCredentialsFilename);
           client.connect(); 
           if (!client.isConnected()) logger.error("WatsonIoTDeviceConnector failed to connect"); }
 

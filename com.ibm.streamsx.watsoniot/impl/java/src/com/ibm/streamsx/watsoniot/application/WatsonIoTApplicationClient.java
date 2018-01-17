@@ -117,7 +117,9 @@ public class WatsonIoTApplicationClient extends ApplicationClient implements Wat
     if (!mBeanServer.isRegistered(mBeanName)) {
       try { mBeanServer.registerMBean( new WatsonIoTApplicationClient(mBeanName, credentials, logger), mBeanName ); }
       catch (InstanceAlreadyExistsException e) { logger.error("WatsonIoTApplicationClient.getClient() caught exception " + e); }
-      logger.info("WatsonIoTApplicationClient created WatsonIotApplicationClientMBean");
+      logger.info("new WatsonIoTApplicationClient created");
+    } else {
+      logger.info("existing WatsonIoTApplicationClient used");
     }
 
     WatsonIoTApplicationClientMBean mBeanProxy = JMX.newMBeanProxy(mBeanServer, mBeanName, WatsonIoTApplicationClientMBean.class);
@@ -148,7 +150,7 @@ public class WatsonIoTApplicationClient extends ApplicationClient implements Wat
       logger.debug("WatsonIoTApplicationClient.takeEvent() dequeued " + event);
       Constructor<?> constructor = eventClass.getDeclaredConstructor(String.class, String.class, String.class, String.class, byte[].class);
       constructor.setAccessible(true);
-      Object object = constructor.newInstance(event.getEvent(), event.getFormat(), event.getDeviceType(), event.getDeviceId(), event.getRawPayload());
+      Object object = constructor.newInstance(event.getDeviceType(), event.getDeviceId(), event.getEvent(), event.getFormat(), event.getRawPayload());
       logger.debug("WatsonIoTApplicationClient.takeEvent() returning object of type " + eventClass.getName() + " containing " + object);
       return object; 
     } 

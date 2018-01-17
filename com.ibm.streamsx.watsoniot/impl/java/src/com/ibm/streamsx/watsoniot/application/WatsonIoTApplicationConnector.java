@@ -179,8 +179,11 @@ public class WatsonIoTApplicationConnector extends AbstractOperator {
                optional=false, 
                //cardinality=1, 
                description="the name of a file containing Watson IoT Platform application credentials" )
-  public void setApplicationCredentials(String filename) { this.applicationCredentials = ApplicationClient.parsePropertiesFile(new File(filename)); }
-  private Properties applicationCredentials;
+    public void setApplicationCredentials(String filename) { 
+      this.applicationCredentialsFilename = filename;
+      this.applicationCredentials = ApplicationClient.parsePropertiesFile(new File(filename)); }
+    private String applicationCredentialsFilename;
+    private Properties applicationCredentials;
   
 	@Parameter ( name="commandName", 
                  optional=false, 
@@ -352,7 +355,7 @@ public class WatsonIoTApplicationConnector extends AbstractOperator {
         if (thread!=null) thread.start();
 
         if (!client.isConnected()) {
-          logger.info("WatsonIoTApplicationConnector connecting to Watson IoT Platform");
+          logger.info("WatsonIoTApplicationConnector connecting to Watson IoT Platform with credentials from " + applicationCredentialsFilename);
           client.connect(); 
           if (!client.isConnected()) logger.error("WatsonIoTApplicationConnector failed to connect"); }
 

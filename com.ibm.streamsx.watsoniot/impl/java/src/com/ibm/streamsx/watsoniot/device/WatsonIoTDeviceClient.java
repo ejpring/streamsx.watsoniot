@@ -112,7 +112,9 @@ public class WatsonIoTDeviceClient extends DeviceClient implements WatsonIoTDevi
     if (!mBeanServer.isRegistered(mBeanName)) {
       try { mBeanServer.registerMBean( new WatsonIoTDeviceClient(mBeanName, credentials, logger), mBeanName ); }
       catch (InstanceAlreadyExistsException e) { logger.error("WatsonIoTApplicationClient.getClient() caught exception " + e); }
-      logger.info("WatsonIoTDeviceClient created WatsonIotDeviceClientMBean");
+      logger.info("new WatsonIoTDeviceClient created");
+    } else {
+      logger.info("existing WatsonIoTDeviceClient used");
     }
 
     WatsonIoTDeviceClientMBean mBeanProxy = JMX.newMBeanProxy(mBeanServer, mBeanName, WatsonIoTDeviceClientMBean.class);
