@@ -16,9 +16,9 @@ toolkitDirectory=$HOME/StreamsToolkits
 
 applicationDirectory=$here
 
-applicationNamespace=com.ibm.streamsx.watsoniot.sample.application
+applicationNamespace=com.ibm.streamsx.watsoniot.sample.device
 
-applicationComposite=SampleWatsonIoTApplicationConnector
+applicationComposite=SampleWatsonIoTDeviceSourceAndSink
 
 applicationCompileTimeParameterList=(
 )
@@ -45,9 +45,6 @@ ldOptions=""
 
 echo "Streams compiler:"
 which sc || die "sorry, could not find the Streams compiler, $?"
-
-step "rebuild streamsx.watsoniot toolkit ..."
-$here/../../com.ibm.streamsx.watsoniot/build.sh || die "sorry, could not re-build streamsx.watsoniot toolkit, $?"
 
 # make sure the Streams application source file exists
 

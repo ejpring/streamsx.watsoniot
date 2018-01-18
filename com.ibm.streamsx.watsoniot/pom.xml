@@ -1,0 +1,22 @@
+<!-- Copyright (C)2014, International Business Machines Corporation and * 
+    others. All Rights Reserved. * -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.ibm.streamsx.watsoniot</groupId>
+    <artifactId>streamsx.watsoniot</artifactId>
+    <packaging>jar</packaging>
+    <version>1.0.0</version>
+    <name>com.ibm.streamsx.watsoniot</name>
+    <repositories>
+    </repositories>
+    <properties>
+    </properties>
+    <dependencies>
+    </dependencies>
+    <build>
+        <sourceDirectory>.</sourceDirectory>
+        <plugins>
+        </plugins>
+    </build>
+</project>

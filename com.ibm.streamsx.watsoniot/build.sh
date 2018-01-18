@@ -12,7 +12,7 @@ step() { echo ; echo -e "\033[1;34m$*\033[0m" ; }
 
 here=$( cd ${0%/*} ; pwd )
 
-jars=( 
+dependencies=( 
     $STREAMS_INSTALL/lib/com.ibm.streams.operator.jar
     $STREAMS_INSTALL/lib/com.ibm.streams.operator.samples.jar
     $( find $here/opt -name "*.jar" ) 
@@ -23,9 +23,13 @@ compilerOptions=(
     -Xlint:unchecked
 )
 
-sources=( $( find $here/impl/java/src -name "*.java" ) )
+sourceFiles=( $( find $here/impl/java/src -name "*.java" ) )
 
-classDirectory="$here/impl/java/bin"
+binDirectory=$here/impl/java/bin
+
+libDirectory=$here/impl/java/lib
+
+jarFile=$libDirectory/com.ibm.streamsx.watsoniot.jar
 
 ###############################################################################
 
@@ -37,9 +41,14 @@ echo "Streams tooling:"
 which spl-make-toolkit || die "sorry, could not find Streams tooling, $?"
 
 step "compiling Java source files ..."
-classpath=$( IFS=$':' ; echo -e "${jars[*]}" )
-[[ -d $classDirectory ]] || mkdir -p $classDirectory || die "sorry, could not create directory $classDirectory, $?"
-javac ${compilerOptions[*]} ${sources[*]} -classpath $classpath -d $classDirectory || die "sorry, could not compile Java source files, $?"
+classpath=$( IFS=$':' ; echo -e "${dependencies[*]}" )
+[[ -d $binDirectory ]] || mkdir -p $binDirectory || die "sorry, could not create directory $binDirectory, $?"
+javac ${compilerOptions[*]} ${sourceFiles[*]} -classpath $classpath -d $binDirectory || die "sorry, could not compile Java source files, $?"
+
+step "packing classfiles into $jarFile ..."
+[[ -d $libDirectory ]] || mkdir -p $libDirectory || die "sorry, could not create directory $libDirectory, $?"
+jar cf $jarFile -C $binDirectory . || die "sorry, could not create $jarFile, $?"
+rm -rf $binDirectory || die "sorry, could not delete $binDirectory, $?"
 
 step "indexing Java toolkit ..."
 spl-make-toolkit -i $here || die "sorry, could not index Streams toolkit, $?"

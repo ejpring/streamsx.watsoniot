@@ -20,6 +20,8 @@ stuff=(
     $here/impl/java/src-gen 
     $here/lib 
     $here/output 
+    $here/doc
+    $here/log
     $here/toolkit.xml 
     $here/.toolkitList
 )

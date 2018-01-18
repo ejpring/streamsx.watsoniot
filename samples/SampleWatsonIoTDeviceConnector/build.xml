@@ -1,0 +1,22 @@
+<!--
+Copyright (C) 2017  International Business Machines Corporation
+All Rights Reserved
+-->
+
+<project name="SampleWatsonIoTDeviceConnector" default="all" basedir=".">
+
+	<target name="all" depends="build" />
+
+	<target name="build">
+          <exec executable="/bin/bash">
+            <arg value="${basedir}/build.sh"/>
+          </exec>
+	</target>
+
+	<target name="clean">
+          <exec executable="/bin/bash">
+            <arg value="${basedir}/clean.sh"/>
+          </exec>
+	</target>
+
+</project>
