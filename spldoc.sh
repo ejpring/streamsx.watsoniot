@@ -17,7 +17,7 @@ step() { echo ; echo -e "\033[1;34m$*\033[0m" ; }
 
 ################################################################################
 
-toolkitName=com.ibm.streamsx.watsoniot
+repositoryName=streamsx.watsoniot
 
 toolkitDirectories=( $( find $here -name 'info.xml' -exec dirname {} \; ) )
 
@@ -33,7 +33,7 @@ spldocOptions=(
     --copy-image-files
 )
 
-step "generating SPLDOC for toolkit $toolkitName ..."
+step "generating SPLDOC for toolkit $repositoryName ..."
 spl-make-doc ${spldocOptions[*]} || die "sorry, could not make SPL documentation"
 
 exit 0

@@ -5,11 +5,11 @@
 // * others. All Rights Reserved. *
 // *******************************************************************************
 -->
-<project name="com.ibm.streamsx.watsoniot" basedir="." default="all">
+<project name="com.ibm.streamsx.watsoniot.device" basedir="." default="all">
 
 	<property environment="env" />
 	<property name="streams.install" value="${env.STREAMS_INSTALL}" />
-	<property name="jarfile" value="com.ibm.streamsx.watsoniot.jar" />
+	<property name="jarfile" value="com.ibm.streamsx.watsoniot.device.jar" />
 	<property name="src.dir" value="impl/java/src" />
 	<property name="build.dir" value="impl/java/bin" />
 	<property name="lib.dir" value="lib" />
@@ -39,6 +39,7 @@
 		<delete dir="${gensrc.dir}"/>
 		<delete dir="output"/>
 		<delete dir="doc"/>
+		<delete dir=".apt_generated"/>
 	</target>
 
 	<target name="toolkit" depends="jar">
@@ -53,7 +54,7 @@
 	<target name="compile" depends="init">
 		<javac srcdir="${src.dir}" destdir="${build.dir}" debug="true"
 			includeantruntime="no"
-			excludes="com/ibm/streamsx/watsoniot/**/*$StreamsModel.java">
+			excludes="com/ibm/streamsx/watsoniot/device/**/*$StreamsModel.java">
 			<classpath>
 				<path refid="classpath" />
 			</classpath>
@@ -62,7 +63,7 @@
 	</target>
 
 	<target name="jar" depends="compile">
-		<jar destfile="${lib.dir}/${jarfile}" basedir="${build.dir}" includes="com/ibm/streamsx/watsoniot/**" filesonly="true" >
+		<jar destfile="${lib.dir}/${jarfile}" basedir="${build.dir}" includes="com/ibm/streamsx/watsoniot/device/**" filesonly="true" >
 		</jar>
 		<delete dir="${build.dir}" />
 	</target>

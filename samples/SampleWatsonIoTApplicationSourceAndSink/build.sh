@@ -25,7 +25,7 @@ applicationCompileTimeParameterList=(
 
 streamsToolkitList=(
     $toolkitDirectory/streamsx.json.toolkits-1.4.3_20171106/com.ibm.streamsx.json
-    $here/../../com.ibm.streamsx.watsoniot
+    $here/../../com.ibm.streamsx.watsoniot.application
 )
 
 streamsCompilerOptionsList=(

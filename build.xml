@@ -13,11 +13,11 @@
 
 	<property environment="env" />
 	<property name="streams.install" value="${env.STREAMS_INSTALL}" />
-	<property name="toolkit" location="com.ibm.streamsx.watsoniot" />
-	<property name="toolkit.test" location="tests" />
+	<property name="device.toolkit" location="com.ibm.streamsx.watsoniot.device" />
+	<property name="application.toolkit" location="com.ibm.streamsx.watsoniot.application" />
 	<property name="tmp" location="tmp" />
 
-	<target name="all" depends="toolkit, buildsamples" />
+	<target name="all" depends="toolkits, buildsamples" />
 
 	<target name="setcommitversion">
 		<!-- Create the time stamp -->
@@ -31,71 +31,47 @@
 		</exec>
 
 		<!-- Update the info.xml -->
-		<replace file="${toolkit}/info.xml" token="__dev__" value="commit_${commithash}" summary="yes" />
+		<replace file="${device.toolkit}/info.xml" token="__dev__" value="commit_${commithash}" summary="yes" />
+		<replace file="${application.toolkit}/info.xml" token="__dev__" value="commit_${commithash}" summary="yes" />
 
 		<!-- Extract info from the toolkit's info.xml -->
-		<xmlproperty file="${toolkit}/info.xml" prefix="tkinfo" keepRoot="no" />
-
-		<echo message="Toolkit Version: ${tkinfo.info:identity.info:version}" />
-		<echo message="Git Hash: ${commithash}" />
+		<xmlproperty file="${device.toolkit}/info.xml" prefix="devicetkinfo" keepRoot="no" />
+		<xmlproperty file="${application.toolkit}/info.xml" prefix="applicationtkinfo" keepRoot="no" />
+		<echo message="device toolkit Version: ${devicetkinfo.info:identity.info:version}" />
+		<echo message="application toolkit Version: ${applicationtkinfo.info:identity.info:version}" />
+		<echo message="git Hash: ${commithash}" />
 	</target>
 
 	<target name="revertversion">
 		<exec executable="git">
 			<arg value="checkout" />
 			<arg value="--" />
-			<arg value="${toolkit}/info.xml" />
+			<arg value="${device.toolkit}/info.xml" />
 		</exec>
 	</target>
 
 	<target name="clean" depends="cleansamples" description="clean up">
-		<ant dir="${toolkit}" target="clean" />
+		<ant dir="${device.toolkit}" target="clean" />
+		<ant dir="${application.toolkit}" target="clean" />
 		<delete dir="${tmp}" />
 		<delete dir="doc" />
 	</target>
 
-	<target name="toolkit" description="Build any code and index the toolkit.">
-		<ant dir="${toolkit}" target="all" />
+	<target name="toolkits" description="Build Java code and index the toolkits.">
+		<ant dir="${device.toolkit}" target="all" />
+		<ant dir="${application.toolkit}" target="all" />
 	</target>
 	
-	<target name="toolkitIndexOnly" description="Index the toolkit.">
+	<target name="toolkitsIndexOnly" description="Index the toolkits.">
 		<property name="pom.file" value="pom.xml" />
-		<ant dir="${toolkit}" target="toolkit" />
+		<ant dir="${device.toolkit}" target="toolkit" />
+		<ant dir="${application.toolkit}" target="toolkit" />
 	</target>
 
-	<target name="spldoc" depends="all, spldoc_work, revertversion" />
-
-	<target name="all-spldoc" depends="all" >
+	<target name="spldoc" depends="all" >
           <exec executable="/bin/bash">
             <arg value="${basedir}/spldoc.sh"/>
           </exec>
-	</target>
-
-	<target name="spldoc_work" depends="setcommitversion">
-		<antcall target="spldoctoolkit">
-			<param name="tkdir" value="${toolkit}" />
-			<param name="tktitle" value="IBMStreams ${tkinfo.info:identity.info:name} Toolkit" />
-		</antcall>
-		<subant target="spldoctoolkit" genericantfile="${basedir}/build.xml">
-			<dirset dir="samples" includes="*" includesfile="build.xml" />
-		</subant>
-	</target>
-
-	<target name="spldoctoolkit">
-		<property name="tkdir" value="${basedir}" />
-		<echo message="Toolkit to SPLDOC: ${tkdir}" />
-		<exec executable="${streams.install}/bin/spl-make-doc">
-			<arg value="--include-composite-operator-diagram" />
-			<arg value="--author" />
-			<arg value="IBMStreams Open Source Community at GitHub - https://github.com/IBMStreams/${ant.project.name}" />
-			<arg value="--doc-title" />
-			<arg value="${tktitle}" />
-			<arg value="--directory" />
-			<arg value="${tkdir}" />
-			<arg value="--check-tags" />
-			<arg value="--copy-image-files" />
-			<arg value="--include-all" />
-		</exec>
 	</target>
 
 	<target name="cleansamples">
@@ -108,10 +84,6 @@
 		<subant target="build" >
 			<dirset dir="samples" includes="*" includesfile="build.xml" />
 		</subant>
-	</target>
-
-	<target name="tests" depends="toolkit">
-		<ant dir="${toolkit.test}" target="all" />
 	</target>
 
 	<target name="indextoolkit">
@@ -131,7 +103,7 @@
 		</exec>
 	</target>
 
-	<target name="release" depends="clean, all, spldoc, toolkitIndexOnly">		
+	<target name="release" depends="clean, all, spldoc, toolkitsIndexOnly">		
 		<mkdir dir="${tmp}" />
 		<property name="releasefilename" value="${tmp}/streamsx.watsoniot.toolkits-${tkinfo.info:identity.info:version}-${DSTAMP}-${TSTAMP}.tgz" />
 		<tar compression="gzip" longfile="gnu"

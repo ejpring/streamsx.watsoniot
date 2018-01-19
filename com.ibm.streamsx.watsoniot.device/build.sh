@@ -14,7 +14,6 @@ here=$( cd ${0%/*} ; pwd )
 
 dependencies=( 
     $STREAMS_INSTALL/lib/com.ibm.streams.operator.jar
-    $STREAMS_INSTALL/lib/com.ibm.streams.operator.samples.jar
     $( find $here/opt -name "*.jar" ) 
 )
 
@@ -29,7 +28,7 @@ binDirectory=$here/impl/java/bin
 
 libDirectory=$here/impl/java/lib
 
-jarFile=$libDirectory/com.ibm.streamsx.watsoniot.jar
+jarFile=$libDirectory/com.ibm.streamsx.watsoniot.device.jar
 
 ###############################################################################
 

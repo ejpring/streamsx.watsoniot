@@ -44,34 +44,34 @@ composite SampleWatsonIoTDeviceSourceAndSink {
   	() as EventTupleConsole = Custom(EventTupleStream as In) { logic onTuple In: { printStringLn("event tuple: " + (rstring)EventTupleStream); } }
 
     // encode tuples into events for Watson IoT Platform
-    stream<rstring event, rstring jsonString> DeviceEventStream = Functor(EventTupleStream) {
+    stream<rstring eventName, rstring jsonString> DeviceEventStream = Functor(EventTupleStream) {
       output DeviceEventStream: 
-        event = "sampleEvent",
+        eventName = "sampleEvent",
         jsonString = tupleToJSON(EventTupleStream); } 
   	() as DeviceEventConsole = Custom(DeviceEventStream as In) { logic onTuple In: { printStringLn(">>>>> sending device event: " + (rstring)DeviceEventStream); } }
 
     // send events to Watson IoT Platform
     () as DeviceEventSink = WatsonIoTDeviceSink(DeviceEventStream) {
       param
-      eventName: event;
+      eventName: eventName;
       eventData: jsonString;
       deviceCredentials: $deviceCredentials; }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     // receive commands from Watson IoT Platform
-    stream<rstring command, rstring jsonString> ApplicationCommandStream = WatsonIoTDeviceSource() {
+    stream<rstring commandName, rstring jsonString> ApplicationCommandStream = WatsonIoTDeviceSource() {
       param
-      commandName: "command";
+      commandName: "commandName";
       commandData: "jsonString";
       deviceCredentials: $deviceCredentials; }
   	() as ApplicationCommandConsole = Custom(ApplicationCommandStream as In) { logic onTuple In: { printStringLn("<<<<< received application command: " + (rstring)ApplicationCommandStream); } }
 
     // decode commands received from Watson IoT Platform into tuples
-    stream<rstring command, CommandTupleType data> CommandTupleStream = JSONToTuple(ApplicationCommandStream) {
+    stream<rstring commandName, CommandTupleType commandData> CommandTupleStream = JSONToTuple(ApplicationCommandStream) {
     param
     inputAttribute: jsonString; 
-    targetAttribute: "data"; }       
+    targetAttribute: "commandData"; }       
   	() as CommandTupleConsole = Custom(CommandTupleStream as In) { logic onTuple In: { printStringLn("command tuple: " + (rstring)CommandTupleStream); } }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
