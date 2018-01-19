@@ -98,7 +98,7 @@ import org.apache.log4j.Logger;
         logger = Logger.getLogger(this.getClass());
         logger.debug("WatsonIoTDeviceSink.initialize() started");
 
-        client = WatsonIoTDeviceClient.getClient(deviceCredentials, false, logger);
+        client = WatsonIoTDeviceClient.getClient(deviceCredentials, null, logger);
 
         logger.debug("WatsonIoTDeviceSink.initialize() ended");
     }

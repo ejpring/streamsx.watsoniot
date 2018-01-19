@@ -3,8 +3,6 @@
 
 package com.ibm.streamsx.watsoniot.device;
 
-import com.ibm.iotf.client.device.Command;
-import com.ibm.iotf.client.device.CommandCallback;
 import com.ibm.iotf.client.device.DeviceClient;
 
 import com.ibm.streams.operator.AbstractOperator;
@@ -23,7 +21,6 @@ import com.ibm.streams.operator.model.PrimitiveOperator;
 import java.io.File;
 
 import java.util.Properties;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.log4j.Logger;
 
@@ -76,7 +73,7 @@ class WatsonIoTDeviceSourceProcess implements Runnable {
     while (running) {
       try {
         logger.debug("WatsonIoTDeviceSourceProcess.run() waiting for event ...");
-        WatsonIoTDeviceSourceCommand command = (WatsonIoTDeviceSourceCommand)client.takeCommand(WatsonIoTDeviceSourceCommand.class); 
+        WatsonIoTDeviceSourceCommand command = (WatsonIoTDeviceSourceCommand)client.takeCommand(); 
         if (command==null) continue;
         logger.debug("WatsonIoTDeviceSourceProcess.run() proceeding with " + command);
 
@@ -182,7 +179,7 @@ public class WatsonIoTDeviceSource extends AbstractOperator {
       if (schema.getAttribute(commandDataAttribute).getType().getMetaType()!=Type.MetaType.RSTRING) throw new Exception("sorry, output attribute '" + commandDataAttribute + "' must be of type 'rstring' for parameter 'commandData'");
       
       // get an instance of a Watson IoT device client, possibly shared with a WatsonIoTDeviceSink operator.
-      client = WatsonIoTDeviceClient.getClient(deviceCredentials, true, logger);
+      client = WatsonIoTDeviceClient.getClient(deviceCredentials, WatsonIoTDeviceSourceCommand.class, logger);
       
       // create a thread for processing commands recieved from applications via 
       // Watson IoT Platform by sending them downstream as output tuples

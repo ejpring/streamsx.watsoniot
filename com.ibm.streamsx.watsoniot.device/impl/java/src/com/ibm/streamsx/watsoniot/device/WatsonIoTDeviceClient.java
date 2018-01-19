@@ -9,14 +9,9 @@ import com.ibm.iotf.client.device.DeviceClient;
 
 import com.ibm.streams.operator.management.OperatorManagement;
 
-import java.io.IOException;
-
-import java.lang.management.ManagementFactory;
 import java.lang.management.ManagementFactory;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 
 import java.util.Hashtable;
 import java.util.Properties;
@@ -79,6 +74,7 @@ public class WatsonIoTDeviceClient extends DeviceClient implements WatsonIoTDevi
   private final Logger logger;
   private final LinkedBlockingQueue<Command> queue;
   private final WatsonIoTDeviceCallback callback;
+  private Constructor<?> constructor;
 
   /*
    * create ...
@@ -90,6 +86,7 @@ public class WatsonIoTDeviceClient extends DeviceClient implements WatsonIoTDevi
     this.logger = logger;
     this.queue = new LinkedBlockingQueue<Command>();
     this.callback = new WatsonIoTDeviceCallback(queue);
+    this.constructor = null;
 
     super.setCommandCallback(callback);
   }
@@ -99,7 +96,7 @@ public class WatsonIoTDeviceClient extends DeviceClient implements WatsonIoTDevi
    * @param credentials a Properties object containing Watson IoT device credentials
    * @throws Exception if the Watson IoT device client cannot be created
    */
-  public static synchronized WatsonIoTDeviceClientMBean getClient(Properties credentials, boolean commands, Logger logger) throws Exception {
+  public static synchronized WatsonIoTDeviceClientMBean getClient(Properties credentials, Class<?> commandClass, Logger logger) throws Exception {
     
     logger.debug("WatsonIoTDeviceClient.getClient() started");
 
@@ -118,7 +115,12 @@ public class WatsonIoTDeviceClient extends DeviceClient implements WatsonIoTDevi
     }
 
     WatsonIoTDeviceClientMBean mBeanProxy = JMX.newMBeanProxy(mBeanServer, mBeanName, WatsonIoTDeviceClientMBean.class);
-    if (commands) mBeanProxy.setEnqueueCommands(true);
+
+    if (commandClass!=null) {
+       mBeanProxy.setEnqueueCommands(true);
+       constructor = commandClass.getDeclaredConstructor(String.class, String.class, byte[].class);
+       constructor.setAccessible(true);
+    }
 
     logger.debug("WatsonIoTDeviceClient.getClient() ended");
     return mBeanProxy;
@@ -137,16 +139,16 @@ public class WatsonIoTDeviceClient extends DeviceClient implements WatsonIoTDevi
   /**
    * This method ...
    */
-  public Object takeCommand(Class<?> commandClass) { 
+  public Object takeCommand() { 
+    
+    if (constructor==null) return null;
 
     try { 
       logger.debug("WatsonIoTDeviceClient.takeCommand() waiting on queue ...");
       Command command = queue.take();
       logger.debug("WatsonIoTDeviceClient.takeCommand() dequeued " + command);
-      Constructor<?> constructor = commandClass.getDeclaredConstructor(String.class, String.class, byte[].class);
-      constructor.setAccessible(true);
       Object object = constructor.newInstance(command.getCommand(), command.getFormat(), command.getRawPayload());
-      logger.debug("WatsonIoTDeviceClient.takeCommand() returning object of type " + commandClass.getName() + " containing " + object);
+      logger.debug("WatsonIoTDeviceClient.takeCommand() returning object of type " + constructor.getName() + " containing " + object);
       return object; 
     } 
     catch (InterruptedException e) {} // ignore this exception 

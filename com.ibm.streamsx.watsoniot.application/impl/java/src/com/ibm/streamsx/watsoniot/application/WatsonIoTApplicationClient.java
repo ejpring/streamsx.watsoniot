@@ -10,13 +10,9 @@ import com.ibm.iotf.client.app.EventCallback;
 
 import com.ibm.streams.operator.management.OperatorManagement;
 
-import java.io.IOException;
-
 import java.lang.management.ManagementFactory;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 
 import java.util.Hashtable;
 import java.util.Properties;
@@ -84,6 +80,7 @@ public class WatsonIoTApplicationClient extends ApplicationClient implements Wat
   private final Logger logger;
   private final LinkedBlockingQueue<Event> queue;
   private final WatsonIoTApplicationCallback callback;
+  private Constructor<?> constructor;
 
   /*
    * create ...
@@ -95,6 +92,7 @@ public class WatsonIoTApplicationClient extends ApplicationClient implements Wat
     this.logger = logger;
     this.queue = new LinkedBlockingQueue<Event>();
     this.callback = new WatsonIoTApplicationCallback(queue);
+    this.constructor = null;
 
     super.setEventCallback(callback);
   }
@@ -104,7 +102,7 @@ public class WatsonIoTApplicationClient extends ApplicationClient implements Wat
    * @param credentials a Properties object containing Watson IoT application credentials
    * @throws Exception if the Watson IoT application client cannot be created
    */
-  public static synchronized WatsonIoTApplicationClientMBean getClient(Properties credentials, boolean events, Logger logger) throws Exception {
+  public static synchronized WatsonIoTApplicationClientMBean getClient(Properties credentials, Class<?> eventClass, Logger logger) throws Exception {
     
     logger.debug("WatsonIoTApplicationClient.getClient() started");
 
@@ -123,7 +121,12 @@ public class WatsonIoTApplicationClient extends ApplicationClient implements Wat
     }
 
     WatsonIoTApplicationClientMBean mBeanProxy = JMX.newMBeanProxy(mBeanServer, mBeanName, WatsonIoTApplicationClientMBean.class);
-    if (events) mBeanProxy.setEnqueueEvents(true);
+
+    if (eventClass!=null) {
+       mBeanProxy.setEnqueueCommands(true);
+       constructor = commandClass.getDeclaredConstructor(String.class, String.class, String.class, String.class, byte[].class);
+       constructor.setAccessible(true);
+    }
 
     logger.debug("WatsonIoTApplicationClient.getClient() ended");
     return mBeanProxy;
@@ -142,16 +145,16 @@ public class WatsonIoTApplicationClient extends ApplicationClient implements Wat
   /**
    * This method ...
    */
-  public Object takeEvent(Class<?> eventClass) { 
+  public Object takeEvent() { 
+
+    if (constructor==null) return null;
 
     try { 
       logger.debug("WatsonIoTApplicationClient.takeEvent() waiting on queue ...");
       Event event = queue.take();
       logger.debug("WatsonIoTApplicationClient.takeEvent() dequeued " + event);
-      Constructor<?> constructor = eventClass.getDeclaredConstructor(String.class, String.class, String.class, String.class, byte[].class);
-      constructor.setAccessible(true);
       Object object = constructor.newInstance(event.getDeviceType(), event.getDeviceId(), event.getEvent(), event.getFormat(), event.getRawPayload());
-      logger.debug("WatsonIoTApplicationClient.takeEvent() returning object of type " + eventClass.getName() + " containing " + object);
+      logger.debug("WatsonIoTApplicationClient.takeEvent() returning object of type " + constructor.getName() + " containing " + object);
       return object; 
     } 
     catch (InterruptedException e) {} // ignore this exception 

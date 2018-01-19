@@ -4,8 +4,6 @@
 package com.ibm.streamsx.watsoniot.application;
 
 import com.ibm.iotf.client.app.ApplicationClient;
-import com.ibm.iotf.client.app.Command;
-import com.ibm.iotf.client.app.Event;
 
 import com.ibm.streams.operator.AbstractOperator;
 import com.ibm.streams.operator.OperatorContext;
@@ -22,7 +20,6 @@ import com.ibm.streams.operator.model.PrimitiveOperator;
 import java.io.File;
 
 import java.util.Properties;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.log4j.Logger;
 
@@ -79,7 +76,7 @@ class WatsonIoTApplicationSourceProcess implements Runnable {
     while (running) {
       try { 
         logger.debug("WatsonIoTApplicationSourceProcess.run() waiting for event ...");
-        WatsonIoTApplicationSourceEvent event = (WatsonIoTApplicationSourceEvent)client.takeEvent(WatsonIoTApplicationSourceEvent.class); 
+        WatsonIoTApplicationSourceEvent event = (WatsonIoTApplicationSourceEvent)client.takeEvent(); 
         if (event==null) continue;
         logger.debug("WatsonIoTApplicationSourceProcess.run() proceeding with " + event);
       
@@ -228,7 +225,7 @@ public class WatsonIoTApplicationSource extends AbstractOperator {
       if (eventDeviceIdAttribute!=null && schema.getAttribute(eventDeviceIdAttribute)==null) throw new Exception("sorry, no output attribute '" + eventDeviceIdAttribute + "' found for parameter 'eventDeviceId'");
       
       // get an instance of a Watson IoT application client, possibly shared with a WatsonIoTApplicationSink operator.
-      client = WatsonIoTApplicationClient.getClient(applicationCredentials, true, logger);
+      client = WatsonIoTApplicationClient.getClient(applicationCredentials, WatsonIoTApplicationSourceEvent.class, logger);
       
       // create a thread for processing events recieved from applications via 
       // Watson IoT Platform by sending them downstream as output tuples

@@ -8,5 +8,7 @@
 			<attribute name="optional" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="opt/watson-iot-0.2.6.jar"/>
+	<classpathentry kind="lib" path="opt/org.eclipse.paho.client.mqttv3-1.1.2-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="impl/java/bin"/>
 </classpath>
