@@ -161,7 +161,7 @@ public class WatsonIoTApplicationSource extends AbstractOperator {
 
   @Parameter ( name="subscriptionEvents", 
                optional=true, 
-               description="output tuples will be produced from these event names, defaulting to '+', meaning all names" )
+               description="output tuples will be produced from events received with these names, defaulting to '+', meaning all names" )
   public void setSubscriptionEvents(String[] subscriptions) { subscriptionEvents = subscriptions; }
   private String[] subscriptionEvents = { "+" };
 
