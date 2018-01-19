@@ -147,39 +147,33 @@ class WatsonIoTApplicationConnectorProcess implements Runnable {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Class for WatsonIoTApplicationConnector operator, which: 
- * <ul>
- * <li>recieves tuples from upstream operators and sends them as commands to devices via the Watson IoT Platform</li>
- * <li>receives events from devices via the Watson IoT Platform and sends them downstream as tuples to other operators.</li>
- * </ul>
+ * The WatsonIoTApplicationConnector operator ...
  */
 
 @PrimitiveOperator ( name="WatsonIoTApplicationConnector", 
                      namespace="com.ibm.streamsx.watsoniot.application", 
-                     description="connects an SPL data flow graph to the Watson IoT Platform as an application that receives events from devices and sends commands to them")
+                     description="The WatsonIoTApplicationConnector operator connects an SPL graph to the Watson IoT Platform as an IoT 'application': it encodes input tuples as 'commands' and sends them to IoT devices; concurrently, it recieves 'events' from IoT devices and decodes them into output tuples. The operator will recieve all events matching the values specified by the 'subscription' parameters, that is, events matching any of the specified device types, device identifiers, event names, and event formats. The operator requires a file containing 'application credentials' issued by Watson IoT Platform. The credentials must be specified as shown in the 'Using a configuration file' section of the page at 'https://console.bluemix.net/docs/services/IoT/applications/libraries/java.html'.")
 @InputPorts ( { 
 	@InputPortSet ( optional=false, 
                     cardinality=1, 
                     windowingMode=WindowMode.NonWindowed, 
                     windowPunctuationInputMode=WindowPunctuationInputMode.Oblivious,
-                    description="input port for tuples to be sent as commands to devices via the Watson IoT Platform" )
+                    description="The input port consumes tuples encoded as 'commands' and sends them to IoT devices via the Watson IoT Platform. Input tuples must at least include attributes for the device type, device identifier, command name, and command data. By default, the data should be formatted as a JSON-encoded string. Optionally, input tuples may include an attribute for the data format." )
       } )
 
 @OutputPorts ( {
 	@OutputPortSet ( optional=false, 
                      cardinality=1, 
                      windowPunctuationOutputMode=WindowPunctuationOutputMode.Free,
-                     description="output port for tuples received as events from devices via the Watson IoT Platform" )
+                     description="The output port produces tuples decoded as 'events' received from IoT devices via the Watson IoT Platform. Output tuples must at least include attributes for the event name and event data. By default, the data is assumed to be formatted as a JSON-encoded string. Optionally, output tuples may include attributes for the device type, device identifier, and data format." )
       } )
 
 @Libraries( { "opt/*" } )
-
 
 public class WatsonIoTApplicationConnector extends AbstractOperator {
 	
   @Parameter ( name="applicationCredentials", 
                optional=false, 
-               //cardinality=1, 
                description="the name of a file containing Watson IoT Platform application credentials" )
     public void setApplicationCredentials(String filename) { 
       this.applicationCredentialsFilename = filename;
@@ -231,19 +225,19 @@ public class WatsonIoTApplicationConnector extends AbstractOperator {
 
   @Parameter ( name="subscriptionDeviceIds", 
                optional=true, 
-               description="output tuples will be produced from events received from these devices, defaulting to '+', meaning all devices" )
+               description="output tuples will be produced from events received from these device identifiers, defaulting to '+', meaning all devices" )
   public void setSubscriptionDeviceIds(String[] subscriptions) { subscriptionDeviceIds = subscriptions; }
   private String[] subscriptionDeviceIds = { "+" };
 
   @Parameter ( name="subscriptionEvents", 
                optional=true, 
-               description="output tuples will be produced from these events, defaulting to '+', meaning all events" )
+               description="output tuples will be produced from these event names, defaulting to '+', meaning all events" )
   public void setSubscriptionEvents(String[] subscriptions) { subscriptionEvents = subscriptions; }
   private String[] subscriptionEvents = { "+" };
 
   @Parameter ( name="subscriptionFormats", 
                optional=true, 
-               description="output tuples will be produced from events received in these formats, defaulting to '+', meaning all formats" )
+               description="output tuples will be produced from events received in these data formats, defaulting to '+', meaning all formats" )
   public void setSubscriptionFormats(String[] subscriptions) { subscriptionFormats = subscriptions; }
   private String[] subscriptionFormats = { "+" };
 

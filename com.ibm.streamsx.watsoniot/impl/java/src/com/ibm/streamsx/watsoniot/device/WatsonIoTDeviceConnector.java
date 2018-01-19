@@ -142,21 +142,21 @@ class WatsonIoTDeviceConnectorProcess implements Runnable {
 
 @PrimitiveOperator ( name="WatsonIoTDeviceConnector", 
                      namespace="com.ibm.streamsx.watsoniot.device", 
-                     description="connects an SPL data flow graph to the Watson IoT Platform as a device that sends events to applications and receives commands from them")
+                     description="The WatsonIoTDeviceConnector operator connects an SPL graph to the Watson IoT Platform as an IoT 'device': it encodes input tuples as 'events' and sends them to IoT applications; concurrently, it recieves 'commands' from IoT applications and decodes them into output tuples. The operator requires a file containing 'device credentials' issued by Watson IoT Platform. The credentials must be specified as shown in the 'Using a configuration file' section of the page at 'https://console.bluemix.net/docs/services/IoT/devices/libraries/java.html'.")
 
 @InputPorts ( { 
 	@InputPortSet ( optional=false, 
                     cardinality=1, 
                     windowingMode=WindowMode.NonWindowed, 
                     windowPunctuationInputMode=WindowPunctuationInputMode.Oblivious,
-                    description="input port for tuples to be sent as events to applications via the Watson IoT Platform" )
+                    description="The input port consumes tuples encoded as 'events' and sends them to IoT applications via the Watson IoT Platform. Input tuples must at least include attributes for the event name and event data. By default, the data should be formatted as a JSON-encoded string. Optionally, input tuples may include an attribute for the data format." )
       } )
 
 @OutputPorts ( {
 	@OutputPortSet ( optional=false, 
                      cardinality=1, 
                      windowPunctuationOutputMode=WindowPunctuationOutputMode.Free,
-                     description="output port for tuples received as commands from applications via the Watson IoT Platform" )
+                     description="The output port produces tuples decoded as 'commands' received from IoT applications via the Watson IoT Platform. Output tuples must at least include attributes for the command name and command data. By default, the data is assumed to be formatted as a JSON-encoded string. Optionally, output tuples may include an attribute for the data format." )
       } )
 
 @Libraries( { "opt/*" } )

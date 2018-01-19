@@ -17,7 +17,7 @@
 	<property name="toolkit.test" location="tests" />
 	<property name="tmp" location="tmp" />
 
-	<target name="all" depends="toolkit,buildsamples" />
+	<target name="all" depends="toolkit, buildsamples" />
 
 	<target name="setcommitversion">
 		<!-- Create the time stamp -->
@@ -63,7 +63,13 @@
 		<ant dir="${toolkit}" target="toolkit" />
 	</target>
 
-	<target name="spldoc" depends="spldoc_work, revertversion" />
+	<target name="spldoc" depends="all, spldoc_work, revertversion" />
+
+	<target name="all-spldoc" depends="all" >
+          <exec executable="/bin/bash">
+            <arg value="${basedir}/spldoc.sh"/>
+          </exec>
+	</target>
 
 	<target name="spldoc_work" depends="setcommitversion">
 		<antcall target="spldoctoolkit">

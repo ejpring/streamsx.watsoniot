@@ -36,13 +36,13 @@ import org.apache.log4j.Logger;
 
 @PrimitiveOperator ( name="WatsonIoTApplicationSink", 
                      namespace="com.ibm.streamsx.watsoniot.application", 
-                     description="connects an SPL data flow graph to the Watson IoT Platform as an application that receives events from devices and sends commands to them")
+                     description="The WatsonIoTApplicationSink operator connects an SPL graph to the Watson IoT Platform as an IoT 'application': it encodes input tuples as 'commands' and sends them to IoT devices. The operator requires a file containing 'application credentials' issued by Watson IoT Platform. The credentials must be specified as shown in the 'Using a configuration file' section of the page at 'https://console.bluemix.net/docs/services/IoT/applications/libraries/java.html'. This operator may be used together with the WatsonIoTApplicationSource operator, which receives 'events' from IoT devices. If so, the pair should specify the same credentials file, and should be fused into the same Streams PE.")
 @InputPorts ( { 
 	@InputPortSet ( optional=false, 
                     cardinality=1, 
                     windowingMode=WindowMode.NonWindowed, 
                     windowPunctuationInputMode=WindowPunctuationInputMode.Oblivious,
-                    description="input port for tuples to be sent as commands to devices via the Watson IoT Platform" )
+                    description="The input port consumes tuples encoded as 'commands' and sends them to IoT devices via the Watson IoT Platform. Input tuples must at least include attributes for the device type, device identifier, command name, and command data. By default, the data should be formatted as a JSON-encoded string. Optionally, input tuples may include an attribute for the data format." )
       } )
 
 @Libraries( { "opt/*" } )

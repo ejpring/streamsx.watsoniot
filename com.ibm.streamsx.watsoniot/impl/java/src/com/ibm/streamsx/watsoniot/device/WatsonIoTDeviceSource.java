@@ -114,13 +114,13 @@ class WatsonIoTDeviceSourceProcess implements Runnable {
 
 @PrimitiveOperator ( name="WatsonIoTDeviceSource", 
                      namespace="com.ibm.streamsx.watsoniot.device", 
-                     description="connects an SPL data flow graph to the Watson IoT Platform as a device that receives commands from applications via the Watson IoT Platform.")
+                     description="The WatsonIoTDeviceSource operator connects an SPL graph to the Watson IoT Platform as an IoT 'device': it recieves 'commands' from IoT devices and decodes them into output tuples. The operator requires a file containing 'device credentials' issued by Watson IoT Platform. The credentials must be specified as shown in the 'Using a configuration file' section of the page at 'https://console.bluemix.net/docs/services/IoT/devices/libraries/java.html'. This operator may be used together with the WatsonIoTDeviceSink operator, which sends 'events' to IoT devices. If so, the pair must specify the same credentials file, and must be fused into the same Streams PE.")
 
 @OutputPorts ( {
 	@OutputPortSet ( optional=false, 
                      cardinality=1, 
                      windowPunctuationOutputMode=WindowPunctuationOutputMode.Free,
-                     description="output port for tuples received as commands from applications via the Watson IoT Platform" )
+                     description="The output port produces tuples decoded as 'commands' received from IoT applications via the Watson IoT Platform. Output tuples must at least include attributes for the command name and command data. By default, the data is assumed to be formatted as a JSON-encoded string. Optionally, output tuples may include an attribute for the data format." )
       } )
 
 @Libraries( { "opt/*" } )

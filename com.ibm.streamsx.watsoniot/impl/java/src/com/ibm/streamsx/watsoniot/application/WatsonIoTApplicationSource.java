@@ -123,13 +123,13 @@ class WatsonIoTApplicationSourceProcess implements Runnable {
 
 @PrimitiveOperator ( name="WatsonIoTApplicationSource", 
                      namespace="com.ibm.streamsx.watsoniot.application", 
-                     description="connects an SPL data flow graph to the Watson IoT Platform as an application that receives events from devices and sends commands to them")
+                     description="The WatsonIoTApplicationSource operator connects an SPL graph to the Watson IoT Platform as an IoT 'application': it recieves 'events' from IoT devices and decodes them into output tuples. The operator will recieve all events matching the values specified by the 'subscription' parameters, that is, events matching any of the specified device types, device identifiers, event names, and event formats. The operator requires a file containing 'application credentials' issued by Watson IoT Platform. The credentials must be specified as shown in the 'Using a configuration file' section of the page at 'https://console.bluemix.net/docs/services/IoT/applications/libraries/java.html'. This operator may be used together with the WatsonIoTApplicationSink operator, which sends 'commands' to IoT devices. If so, the pair should specify the same credentials file, and should be fused into the same Streams PE.")
 
 @OutputPorts ( {
 	@OutputPortSet ( optional=false, 
                      cardinality=1, 
                      windowPunctuationOutputMode=WindowPunctuationOutputMode.Free,
-                     description="output port for tuples received as events from devices via the Watson IoT Platform" )
+                     description="The output port produces tuples decoded as 'events' received from IoT devices via the Watson IoT Platform. Output tuples must at least include attributes for the event name and event data. By default, the data is assumed to be formatted as a JSON-encoded string. Optionally, output tuples may include attributes for the device type, device identifier, and data format." )
       } )
 
 @Libraries( { "opt/*" } )
@@ -155,19 +155,19 @@ public class WatsonIoTApplicationSource extends AbstractOperator {
 
   @Parameter ( name="subscriptionDeviceIds", 
                optional=true, 
-               description="output tuples will be produced from events received from these devices, defaulting to '+', meaning all devices" )
+               description="output tuples will be produced from events received from these device identifiers, defaulting to '+', meaning all devices" )
   public void setSubscriptionDeviceIds(String[] subscriptions) { subscriptionDeviceIds = subscriptions; }
   private String[] subscriptionDeviceIds = { "+" };
 
   @Parameter ( name="subscriptionEvents", 
                optional=true, 
-               description="output tuples will be produced from these events, defaulting to '+', meaning all events" )
+               description="output tuples will be produced from these event names, defaulting to '+', meaning all names" )
   public void setSubscriptionEvents(String[] subscriptions) { subscriptionEvents = subscriptions; }
   private String[] subscriptionEvents = { "+" };
 
   @Parameter ( name="subscriptionFormats", 
                optional=true, 
-               description="output tuples will be produced from events received in these formats, defaulting to '+', meaning all formats" )
+               description="output tuples will be produced from events received in these data formats, defaulting to '+', meaning all formats" )
   public void setSubscriptionFormats(String[] subscriptions) { subscriptionFormats = subscriptions; }
   private String[] subscriptionFormats = { "+" };
 

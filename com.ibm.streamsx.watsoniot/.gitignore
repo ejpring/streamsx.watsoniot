@@ -1,6 +1,8 @@
-/.apt_generated/
-/.toolkitList
-/output/
-
+.apt_generated/
+output/
+lib/
 com.ibm.streamsx.watsoniot.application/
 com.ibm.streamsx.watsoniot.device/
+
+.toolkitList
+toolkit.xml
