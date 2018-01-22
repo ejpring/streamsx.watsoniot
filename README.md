@@ -12,7 +12,7 @@ The 'streamsx.watsoniot' repository contains operators for IBM Streams that can 
 
 * The 'com.ibm.streamsx.watsoniot.device' toolkit contains operators that connect a PE to the Watson IoT Platform as a 'device'. These operators should be used in PEs that run outside the IBM cloud. They read sensors for device analytics, encode their data into event messages, and send them to applications via the Watson IoT Platform. They may also decode command messages from applications and send them to device analytics and actuators.
 
-The specifics for configuring each operator are documented in [these SPLDOC pages](http://ejpring.github.io/streamsx.watsoniot). Note that all of the operators in these toolkits require credentials from Watson IoT Platform, as described below. 
+The specifics for configuring each operator are in the [SPLDOC documentation](http://ejpring.github.io/streamsx.watsoniot). Note that all of the operators in these toolkits require credentials from Watson IoT Platform, as described below. 
 
 The repository includes several samples that illustrate how the operators can be configured in SPL flow graphs to connect analytics to the Watson IoT Platform.
 
