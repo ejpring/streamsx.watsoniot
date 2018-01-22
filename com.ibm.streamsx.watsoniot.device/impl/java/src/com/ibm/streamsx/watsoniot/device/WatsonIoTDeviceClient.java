@@ -70,33 +70,12 @@ class WatsonIoTDeviceCallback implements CommandCallback {
 
 public class WatsonIoTDeviceClient extends DeviceClient implements WatsonIoTDeviceClientMBean, MBeanRegistration {
 	
-  private final ObjectName objectName;
-  private final Logger logger;
-  private final LinkedBlockingQueue<Command> queue;
-  private final WatsonIoTDeviceCallback callback;
-  private Constructor<?> constructor;
-
-  /*
-   * create ...
-   * @throws Exception if ...
-   */
-  private WatsonIoTDeviceClient(ObjectName objectName, Properties credentials, Logger logger) throws Exception { 
-    super(credentials); 
-    this.objectName = objectName;
-    this.logger = logger;
-    this.queue = new LinkedBlockingQueue<Command>();
-    this.callback = new WatsonIoTDeviceCallback(queue);
-    this.constructor = null;
-
-    super.setCommandCallback(callback);
-  }
-
   /**
    * This static method creates a new ...............
    * @param credentials a Properties object containing Watson IoT device credentials
    * @throws Exception if the Watson IoT device client cannot be created
    */
-  public static synchronized WatsonIoTDeviceClientMBean getClient(Properties credentials, Class<?> commandClass, Logger logger) throws Exception {
+  public static synchronized WatsonIoTDeviceClientMBean getClient(Properties credentials, Logger logger) throws Exception {
     
     logger.debug("WatsonIoTDeviceClient.getClient() started");
 
@@ -115,24 +94,49 @@ public class WatsonIoTDeviceClient extends DeviceClient implements WatsonIoTDevi
     }
 
     WatsonIoTDeviceClientMBean mBeanProxy = JMX.newMBeanProxy(mBeanServer, mBeanName, WatsonIoTDeviceClientMBean.class);
-
+    /*********************
     if (commandClass!=null) {
        mBeanProxy.setEnqueueCommands(true);
        constructor = commandClass.getDeclaredConstructor(String.class, String.class, byte[].class);
        constructor.setAccessible(true);
     }
-
+    ********************************/
     logger.debug("WatsonIoTDeviceClient.getClient() ended");
     return mBeanProxy;
   }
 
 
+  private final ObjectName objectName;
+  private final Logger logger;
+  private final LinkedBlockingQueue<Command> queue;
+  private final WatsonIoTDeviceCallback callback;
+  private Constructor<?> constructor = null;
+
+
+
+  /*
+   * create ...
+   * @throws Exception if ...
+   */
+  private WatsonIoTDeviceClient(ObjectName objectName, Properties credentials, Logger logger) throws Exception { 
+    super(credentials); 
+    this.objectName = objectName;
+    this.logger = logger;
+    this.queue = new LinkedBlockingQueue<Command>();
+    this.callback = new WatsonIoTDeviceCallback(queue);
+    this.constructor = null;
+
+    super.setCommandCallback(callback);
+  }
+
 
   /**
    * This method ...
    */
-  public void setEnqueueCommands(boolean enqueue) {
-    callback.enqueue = enqueue;
+  public void setEnqueueCommands(Class<?> commandClass) throws Exception {
+    constructor = commandClass.getDeclaredConstructor(String.class, String.class, byte[].class);
+    constructor.setAccessible(true);
+    callback.enqueue = true;
   }
 
 

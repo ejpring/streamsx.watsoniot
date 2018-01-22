@@ -10,7 +10,7 @@
  <info:dependencies>
    <info:toolkit>
      <common:name>com.ibm.streamsx.json</common:name>
-     <common:version>1.4.3.__dev__</common:version>
+     <common:version>1.3.0</common:version>
    </info:toolkit>
    <info:toolkit>
      <common:name>com.ibm.streamsx.watsoniot.device</common:name>

@@ -26,7 +26,7 @@ stuff=(
     $here/.toolkitList
 )
 
-rm -rf ${stuff[*]}
+echo rm -rf ${stuff[*]}
 exit $?
 
 

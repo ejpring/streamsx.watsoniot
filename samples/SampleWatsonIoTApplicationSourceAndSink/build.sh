@@ -12,7 +12,7 @@ step() { echo ; echo -e "\033[1;34m$*\033[0m" ; }
 
 here=$( cd ${0%/*} ; pwd )
 
-toolkitDirectory=$HOME/StreamsToolkits
+############toolkitDirectory=$HOME/StreamsToolkits
 
 applicationDirectory=$here
 
@@ -24,7 +24,8 @@ applicationCompileTimeParameterList=(
 )
 
 streamsToolkitList=(
-    $toolkitDirectory/streamsx.json.toolkits-1.4.3_20171106/com.ibm.streamsx.json
+    ###########$toolkitDirectory/streamsx.json.toolkits-1.4.3_20171106/com.ibm.streamsx.json
+    $STREAMS_INSTALL/toolkits/com.ibm.streamsx.json
     $here/../../com.ibm.streamsx.watsoniot.application
 )
 

@@ -112,7 +112,7 @@ public class WatsonIoTApplicationSink extends AbstractOperator {
         logger = Logger.getLogger(this.getClass());
         logger.debug("WatsonIoTApplicationSink.initialize() started");
 
-        client = WatsonIoTApplicationClient.getClient(applicationCredentials, null, logger);
+        client = WatsonIoTApplicationClient.getClient(applicationCredentials, logger);
 
         logger.debug("WatsonIoTApplicationSink.initialize() ended");
     }

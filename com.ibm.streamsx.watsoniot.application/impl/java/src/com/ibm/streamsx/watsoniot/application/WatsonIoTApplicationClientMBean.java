@@ -11,9 +11,9 @@ public interface WatsonIoTApplicationClientMBean {
 
   public void connect() throws MqttException;
 
-  public void setEnqueueEvents(boolean enqueue);
+  public void setEnqueueEvents(Class<?> eventClass) throws Exception;
 
-  public Object takeEvent(Class<?> eventClass);
+  public Object takeEvent();
 
   public void subscribeToDeviceEvents(String deviceType, String deviceId, String event, String format) throws Exception;
 

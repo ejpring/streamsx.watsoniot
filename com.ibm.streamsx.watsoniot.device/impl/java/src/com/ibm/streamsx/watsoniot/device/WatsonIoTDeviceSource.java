@@ -179,8 +179,11 @@ public class WatsonIoTDeviceSource extends AbstractOperator {
       if (schema.getAttribute(commandDataAttribute).getType().getMetaType()!=Type.MetaType.RSTRING) throw new Exception("sorry, output attribute '" + commandDataAttribute + "' must be of type 'rstring' for parameter 'commandData'");
       
       // get an instance of a Watson IoT device client, possibly shared with a WatsonIoTDeviceSink operator.
-      client = WatsonIoTDeviceClient.getClient(deviceCredentials, WatsonIoTDeviceSourceCommand.class, logger);
-      
+      client = WatsonIoTDeviceClient.getClient(deviceCredentials, logger);
+
+      // configure the client to enqueue commands which we will process in a separate thread
+      client.setEnqueueCommands(WatsonIoTDeviceSourceCommand.class);
+
       // create a thread for processing commands recieved from applications via 
       // Watson IoT Platform by sending them downstream as output tuples
       process = new WatsonIoTDeviceSourceProcess(this, client, logger);

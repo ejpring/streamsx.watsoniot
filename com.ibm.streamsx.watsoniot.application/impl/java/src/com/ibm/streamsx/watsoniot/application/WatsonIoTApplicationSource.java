@@ -225,8 +225,11 @@ public class WatsonIoTApplicationSource extends AbstractOperator {
       if (eventDeviceIdAttribute!=null && schema.getAttribute(eventDeviceIdAttribute)==null) throw new Exception("sorry, no output attribute '" + eventDeviceIdAttribute + "' found for parameter 'eventDeviceId'");
       
       // get an instance of a Watson IoT application client, possibly shared with a WatsonIoTApplicationSink operator.
-      client = WatsonIoTApplicationClient.getClient(applicationCredentials, WatsonIoTApplicationSourceEvent.class, logger);
+      client = WatsonIoTApplicationClient.getClient(applicationCredentials, logger);
       
+      // configure the client to enqueue events which we will process in a separate thread
+      client.setEnqueueEvents(WatsonIoTApplicationSourceEvent.class);
+
       // create a thread for processing events recieved from applications via 
       // Watson IoT Platform by sending them downstream as output tuples
       process = new WatsonIoTApplicationSourceProcess(this, client, logger);
