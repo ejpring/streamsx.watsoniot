@@ -23,7 +23,7 @@ toolkitDirectories=( $( find $here -name 'info.xml' -exec dirname {} \; ) )
 
 toolkitPath=$( IFS=":" ; echo "${toolkitDirectories[*]}" )
 
-spldocDirectory=$here/doc/spldoc
+spldocDirectory=$here/docs/spldoc
 
 spldocOptions=(
     --toolkit-path $toolkitPath 
