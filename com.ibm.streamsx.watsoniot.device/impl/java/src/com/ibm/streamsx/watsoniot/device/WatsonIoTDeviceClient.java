@@ -94,13 +94,7 @@ public class WatsonIoTDeviceClient extends DeviceClient implements WatsonIoTDevi
     }
 
     WatsonIoTDeviceClientMBean mBeanProxy = JMX.newMBeanProxy(mBeanServer, mBeanName, WatsonIoTDeviceClientMBean.class);
-    /*********************
-    if (commandClass!=null) {
-       mBeanProxy.setEnqueueCommands(true);
-       constructor = commandClass.getDeclaredConstructor(String.class, String.class, byte[].class);
-       constructor.setAccessible(true);
-    }
-    ********************************/
+
     logger.debug("WatsonIoTDeviceClient.getClient() ended");
     return mBeanProxy;
   }

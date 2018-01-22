@@ -181,7 +181,7 @@ public class WatsonIoTDeviceSource extends AbstractOperator {
       // get an instance of a Watson IoT device client, possibly shared with a WatsonIoTDeviceSink operator.
       client = WatsonIoTDeviceClient.getClient(deviceCredentials, logger);
 
-      // configure the client to enqueue commands which we will process in a separate thread
+      // configure the client to enqueue commands to be processed in a separate thread
       client.setEnqueueCommands(WatsonIoTDeviceSourceCommand.class);
 
       // create a thread for processing commands recieved from applications via 

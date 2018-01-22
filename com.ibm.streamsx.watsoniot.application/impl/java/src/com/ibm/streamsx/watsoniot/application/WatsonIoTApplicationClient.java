@@ -100,13 +100,7 @@ public class WatsonIoTApplicationClient extends ApplicationClient implements Wat
     }
 
     WatsonIoTApplicationClientMBean mBeanProxy = JMX.newMBeanProxy(mBeanServer, mBeanName, WatsonIoTApplicationClientMBean.class);
-    /***********************
-    if (eventClass!=null) {
-       mBeanProxy.setEnqueueEvents(true);
-       constructor = eventClass.getDeclaredConstructor(String.class, String.class, String.class, String.class, byte[].class);
-       constructor.setAccessible(true);
-    }
-    ************************/
+
     logger.debug("WatsonIoTApplicationClient.getClient() ended");
     return mBeanProxy;
   }

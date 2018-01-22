@@ -227,7 +227,7 @@ public class WatsonIoTApplicationSource extends AbstractOperator {
       // get an instance of a Watson IoT application client, possibly shared with a WatsonIoTApplicationSink operator.
       client = WatsonIoTApplicationClient.getClient(applicationCredentials, logger);
       
-      // configure the client to enqueue events which we will process in a separate thread
+      // configure the client to enqueue events to be processed in a separate thread
       client.setEnqueueEvents(WatsonIoTApplicationSourceEvent.class);
 
       // create a thread for processing events recieved from applications via 
