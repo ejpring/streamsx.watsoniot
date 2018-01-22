@@ -4,9 +4,9 @@ All Rights Reserved
 ----
 
 
-# com.ibm.streamsx.watsoniot toolkits for IBM Streams
+# streamsx.watsoniot -- toolkits for IBM Streams
 
-The 'streamsx.watsoniot' repository contains toolkits for IBM Streams that can connect its processing elements (PEs) to the Watson IoT Platform:
+The 'streamsx.watsoniot' repository contains operators for IBM Streams that can connect its processing elements (PEs) to the Watson IoT Platform:
 
 * The 'com.ibm.streamsx.watsoniot.application' toolkit contains operators that connect a PE to the Watson IoT Platform as a 'application'. These operators should be used in PEs that run in a Streaming Analytics instance in IBM Cloud. They receive event messages from devices via the Watson IoT Platform, decode their data into tuples, and send it downstream to cloud analytics. They may also encode commands from cloud analytics and send them to devices.
 
@@ -14,6 +14,7 @@ The 'streamsx.watsoniot' repository contains toolkits for IBM Streams that can c
 
 The specifics for configuring each operator are documented in [these SPLDOC pages](http://ejpring.github.io/streamsx.watsoniot). Note that all of the operators in these toolkits require credentials from Watson IoT Platform, as described below. 
 
+The repository includes several samples that illustrate how the operators can be configured in SPL flow graphs to connect analytics to the Watson IoT Platform.
 
 
 # com.ibm.streamsx.watsoniot.application toolkit
