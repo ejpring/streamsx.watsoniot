@@ -8,11 +8,11 @@ All Rights Reserved
 
 The 'streamsx.watsoniot' repository contains operators for IBM Streams that can connect its processing elements (PEs) to the Watson IoT Platform:
 
-* The 'com.ibm.streamsx.watsoniot.application' toolkit contains operators that connect a PE to the Watson IoT Platform as a 'application'. These operators should be used in PEs that run in a Streaming Analytics instance in IBM Cloud. They receive event messages from devices via the Watson IoT Platform, decode their data into tuples, and send it downstream to cloud analytics. They may also encode commands from cloud analytics and send them to devices.
+* The [com.ibm.streamsx.watsoniot.application](https://ejpring.github.io/streamsx.watsoniot/spldoc/html/tk$com.ibm.streamsx.watsoniot.application/ns$com.ibm.streamsx.watsoniot.application.html) toolkit contains operators that connect a PE to the Watson IoT Platform as a 'application'. These operators should be used in PEs that run in a Streaming Analytics instance in IBM Cloud. They receive event messages from devices via the Watson IoT Platform, decode their data into tuples, and send it downstream to cloud analytics. They may also encode commands from cloud analytics and send them to devices.
 
-* The 'com.ibm.streamsx.watsoniot.device' toolkit contains operators that connect a PE to the Watson IoT Platform as a 'device'. These operators should be used in PEs that run outside the IBM cloud. They read sensors for device analytics, encode their data into event messages, and send them to applications via the Watson IoT Platform. They may also decode command messages from applications and send them to device analytics and actuators.
+* The [com.ibm.streamsx.watsoniot.device](https://ejpring.github.io/streamsx.watsoniot/spldoc/html/tk$com.ibm.streamsx.watsoniot.device/ns$com.ibm.streamsx.watsoniot.device.html) toolkit contains operators that connect a PE to the Watson IoT Platform as a 'device'. These operators should be used in PEs that run outside the IBM cloud. They read sensors for device analytics, encode their data into event messages, and send them to applications via the Watson IoT Platform. They may also decode command messages from applications and send them to device analytics and actuators.
 
-The specifics for configuring each operator are in the [SPLDOC documentation](http://ejpring.github.io/streamsx.watsoniot). Note that all of the operators in these toolkits require credentials from Watson IoT Platform, as described below. 
+The specifics for configuring each operator are in the [SPLDOC documentation](http://ejpring.github.io/streamsx.watsoniot/spldoc/html/index.html). Note that all of the operators in these toolkits require credentials from Watson IoT Platform, as described below. 
 
 The repository includes several samples that illustrate how the operators can be configured in SPL flow graphs to connect analytics to the Watson IoT Platform.
 
@@ -37,7 +37,7 @@ The operators in the 'com.ibm.streamsx.watsoniot.application' toolkit require ap
 
 ![WatsonIoTPlatform dashboard --> Apps --> Generate API Key](images/WatsonIoTPlatform_dashboard_Apps_GenerateAPIKey.png)
 
-*Before clicking 'Generate'*, copy the 'API Key' and 'Authentication Token' fields into an 'applicationid.credentials' file, like this:
+Before clicking 'Generate', copy the 'API Key' and 'Authentication Token' fields into an 'applicationid.credentials' file, like this:
 
 ```
 [application]
@@ -57,9 +57,9 @@ See [Using a configuration file](https://github.com/IBM-Bluemix-Docs/IoT/blob/ma
 
 This repository includes sample SPL source code that illustrates how the 'application' operators in a PE running in a Streaming Analytics instance in the IBM Cloud can be configured to recieve events from the Watson IoT Platform and send commands to it. Each sample is included in the repository as a separate Eclipse project for Streams Studio:
 
-* The SampleWatsonIoTApplicationConnector project illustrates the WatsonIoTApplicationConnector operator
+* The [SampleWatsonIoTApplicationConnector](https://ejpring.github.io/streamsx.watsoniot/spldoc/html/tk$SampleWatsonIoTApplicationConnector/spl$com.ibm.streamsx.watsoniot.sample.application$SampleWatsonIoTApplicationConnector.html#spldoc_compilationunit__composite_operator__SampleWatsonIoTApplicationConnector) project illustrates the WatsonIoTApplicationConnector operator
 
-* The SampleWatsonIoTApplicationSourceAndSink project illustates the WatsonIoTApplicationSource and SinkWatsonIoTApplication operators
+* The [SampleWatsonIoTApplicationSourceAndSink](https://ejpring.github.io/streamsx.watsoniot/spldoc/html/tk$SampleWatsonIoTApplicationSourceAndSink/spl$com.ibm.streamsx.watsoniot.sample.application$SampleWatsonIoTApplicationSourceAndSink.html#spldoc_compilationunit__composite_operator__SampleWatsonIoTApplicationSourceAndSink) project illustates the WatsonIoTApplicationSource and SinkWatsonIoTApplication operators
 
 These projects encode data for both events and commands in the default format of 'json', and depend upon the 'com.ibm.streamsx.json' toolkit. That toolkit is included in the IBM Streams product at '$STREAMS_INSTALL/toolkits/com.ibm.streams.json'.
 
@@ -149,9 +149,9 @@ See [Using a configuration file](https://github.com/IBM-Bluemix-Docs/IoT/blob/ma
 
 This repository includes sample SPL source code that illustrates how the 'device' operators in PEs running outside the IBM Cloud can be configured to send events to the Watson IoT Platform and receive commands from it. Each sample is included in the repository as a separate Eclipse project for Streams Studio:
 
-* The SampleWatsonIoTDeviceConnector project illustrates the WatsonIoTDeviceConnector operator
+* The [SampleWatsonIoTDeviceConnector](https://ejpring.github.io/streamsx.watsoniot/spldoc/html/tk$SampleWatsonIoTDeviceConnector/spl$com.ibm.streamsx.watsoniot.sample.device$SampleWatsonIoTDeviceConnector.html#spldoc_compilationunit__composite_operator__SampleWatsonIoTDeviceConnector) project illustrates the WatsonIoTDeviceConnector operator
 
-* The SampleWatsonIoTDeviceSourceAndSink project illustates the WatsonIoTDeviceSource and SinkWatsonIoTDevice operators
+* The [SampleWatsonIoTDeviceSourceAndSink](https://ejpring.github.io/streamsx.watsoniot/spldoc/html/tk$SampleWatsonIoTDeviceSourceAndSink/spl$com.ibm.streamsx.watsoniot.sample.device$SampleWatsonIoTDeviceSourceAndSink.html#spldoc_compilationunit__composite_operator__SampleWatsonIoTDeviceSourceAndSink) project illustates the WatsonIoTDeviceSource and SinkWatsonIoTDevice operators
 
 These projects encode data for both events and commands in the default format of 'json', and depend upon the 'com.ibm.streamsx.json' toolkit. That toolkit is included in the IBM Streams product at '$STREAMS_INSTALL/toolkits/com.ibm.streams.json'.
 

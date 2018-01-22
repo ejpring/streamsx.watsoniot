@@ -1,5 +1,5 @@
 title: streamsx.watsoniot
-description: operators for IBM Streams that connect to the Watson IoT Platform
+description: operators for IBM Streams that connect PEs to the Watson IoT Platform
 show_downloads: true
 google_analytics:
 theme: jekyll-theme-cayman
