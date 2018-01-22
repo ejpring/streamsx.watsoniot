@@ -127,7 +127,7 @@ Alternatively, PEs may connect to the Watson IoT Platform as devices with a pair
 
 The operators in the 'com.ibm.streamsx.watsoniot.device' toolkit require device credentials granted by the Watson IoT platform to connect. To create device credentials, navigate to the "IBM Watson IoT Platform" dashboard, click "Devices" in the left-side toolbar, and click "+Add Device". Fill in the forms, clicking "Next" on each one. Then click "Done" on the "Summary" to reach this page:
 
-![WatsonIoTPlatform dashboard --> Devices -> +Add Device ... Device Credentials](images/WatsonIoTPlatform_dashboard_Devices_DeviceCredentials.png)
+![WatsonIoTPlatform dashboard --> Devices -> +Add Device ... Device Credentials](images/WatsonIoTPlatform_dashboard_Devices_AddDevice_Credentials.png)
 
 *After clicking 'Done'*, copy the 'Organization ID', 'Device Type', 'Device ID', and 'Authentication Token' fields into a 'deviceid.credentials' file, like this:
 
