@@ -1,0 +1,22 @@
+{
+    "streaming-analytics": [
+	{
+	    "name": "MyStreamingAnalytics",
+	    "credentials":	    
+	    {
+		"password": "8f6a2036-b077-4c71-a030-6b42aac28dca",
+		"rest_port": "443",
+		"bundles_path": "/jax-rs/bundles/service_instances/f6f82819-1c0b-4b7e-acb4-192c192bac56/service_bindings/b30f2db2-8403-421a-b429-e875c75f7a09",
+		"resources_path": "/jax-rs/resources/service_instances/f6f82819-1c0b-4b7e-acb4-192c192bac56/service_bindings/b30f2db2-8403-421a-b429-e875c75f7a09",
+		"stop_path": "/jax-rs/streams/stop/service_instances/f6f82819-1c0b-4b7e-acb4-192c192bac56/service_bindings/b30f2db2-8403-421a-b429-e875c75f7a09",
+		"rest_host": "streams-app-service.ng.bluemix.net",
+		"size_path": "/jax-rs/streams/size/service_instances/f6f82819-1c0b-4b7e-acb4-192c192bac56/service_bindings/b30f2db2-8403-421a-b429-e875c75f7a09",
+		"jobs_path": "/jax-rs/jobs/service_instances/f6f82819-1c0b-4b7e-acb4-192c192bac56/service_bindings/b30f2db2-8403-421a-b429-e875c75f7a09",
+		"start_path": "/jax-rs/streams/start/service_instances/f6f82819-1c0b-4b7e-acb4-192c192bac56/service_bindings/b30f2db2-8403-421a-b429-e875c75f7a09",
+		"rest_url": "https://streams-app-service.ng.bluemix.net",
+		"userid": "bacf71d8-2852-40fe-ae19-96551cf5cb8c",
+		"status_path": "/jax-rs/streams/status/service_instances/f6f82819-1c0b-4b7e-acb4-192c192bac56/service_bindings/b30f2db2-8403-421a-b429-e875c75f7a09"
+	    }
+	}
+    ]
+}

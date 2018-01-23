@@ -1,3 +1,5 @@
-/.apt_generated/
-/.toolkitList
-/output/
+.apt_generated/
+.toolkitList
+output/
+logs/
+vcap.json

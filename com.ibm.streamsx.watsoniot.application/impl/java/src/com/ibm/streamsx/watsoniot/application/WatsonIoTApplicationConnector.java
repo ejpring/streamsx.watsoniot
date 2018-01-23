@@ -3,7 +3,7 @@
 
 package com.ibm.streamsx.watsoniot.application;
 
-import java.io.File;
+import java.io.StringReader;
 
 import java.util.Properties;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -172,13 +172,13 @@ class WatsonIoTApplicationConnectorProcess implements Runnable {
 
 public class WatsonIoTApplicationConnector extends AbstractOperator {
 	
-  @Parameter ( name="applicationCredentials", 
+    @Parameter ( name="applicationCredentials", 
                optional=false, 
-               description="the name of a file containing Watson IoT Platform application credentials" )
-    public void setApplicationCredentials(String filename) { 
-      this.applicationCredentialsFilename = filename;
-      this.applicationCredentials = ApplicationClient.parsePropertiesFile(new File(filename)); }
-    private String applicationCredentialsFilename;
+               description="the contents of a Watson IoT Platform application credentials file (that is, a Java Properties file containing 'key = value' pairs), with newlines replaced by commas" )
+    public void setApplicationCredentials(String credentials) throws Exception { 
+      this.applicationCredentials = new Properties(); 
+      applicationCredentials.load(new StringReader(credentials.replace(',', '\n'))); 
+      System.out.println("******************"+applicationCredentials); }
     private Properties applicationCredentials;
   
 	@Parameter ( name="commandName", 
@@ -336,7 +336,7 @@ public class WatsonIoTApplicationConnector extends AbstractOperator {
         if (thread!=null) thread.start();
 
         if (!client.isConnected()) {
-          logger.info("WatsonIoTApplicationConnector connecting to Watson IoT Platform with credentials from " + applicationCredentialsFilename);
+          logger.info("WatsonIoTApplicationConnector connecting to Watson IoT Platform");
           client.connect(); 
           if (!client.isConnected()) logger.error("WatsonIoTApplicationConnector failed to connect"); }
 

@@ -147,7 +147,7 @@
    	() as DeviceCommandConsole = Custom(ApplicationCommandStream as In) { logic onTuple In: { printStringLn("&gt;&gt;&gt;&gt;&gt; sending application command: " + (rstring)ApplicationCommandStream); } }
  
      // send encoded commands to Watson IoT Platform and receive encoded events from it
-     stream&lt;rstring eventName, rstring jsonString, rstring deviceType, rstring deviceId&gt; DeviceEventStream = WatsonIoTApplicationConnector(ApplicationCommandStream) {
+     stream&lt;rstring eventName, rstring deviceId, rstring deviceType, rstring jsonString&gt; DeviceEventStream = WatsonIoTApplicationConnector(ApplicationCommandStream) {
        param
        commandName: commandName;
        commandData: jsonString;
@@ -163,7 +163,7 @@
    	() as DeviceEventConsole = Custom(DeviceEventStream as In) { logic onTuple In: { printStringLn("&lt;&lt;&lt;&lt;&lt; received device event: " + (rstring)DeviceEventStream); } }
  
      // decode events received from Watson IoT Platform into tuples
-     stream&lt;rstring eventName, EventTupleType eventData, rstring device&gt; EventTupleStream = JSONToTuple(DeviceEventStream) {
+     stream&lt;rstring eventName, rstring deviceId, rstring deviceType, EventTupleType eventData&gt; EventTupleStream = JSONToTuple(DeviceEventStream) {
      param
      inputAttribute: jsonString; 
      targetAttribute: "eventData"; }       

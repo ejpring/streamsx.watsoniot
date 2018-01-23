@@ -89,8 +89,8 @@ public class WatsonIoTApplicationClient extends ApplicationClient implements Wat
 
     Hashtable<String,String> credentialsHashtable = new Hashtable<String,String>();
     for (String name: credentials.stringPropertyNames()) credentialsHashtable.put(name, credentials.getProperty(name));
-    ObjectName mBeanName = new ObjectName("WatsonIoTApplicationClient", credentialsHashtable);
 
+    ObjectName mBeanName = new ObjectName("WatsonIoTApplicationClient", credentialsHashtable);
     if (!mBeanServer.isRegistered(mBeanName)) {
       try { mBeanServer.registerMBean( new WatsonIoTApplicationClient(mBeanName, credentials, logger), mBeanName ); }
       catch (InstanceAlreadyExistsException e) { logger.error("WatsonIoTApplicationClient.getClient() caught exception " + e); }

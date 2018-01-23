@@ -67,7 +67,7 @@ composite SampleWatsonIoTApplicationSourceAndSink {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     // receive encoded events from Watson IoT Platform
-    stream<rstring eventName, rstring deviceType, rstring deviceId, rstring jsonString> DeviceEventStream = WatsonIoTApplicationSource() {
+    stream<rstring eventName, rstring deviceId, rstring deviceType, rstring jsonString> DeviceEventStream = WatsonIoTApplicationSource() {
       param
       subscriptionDeviceTypes: $sampleDeviceType;
       subscriptionFormats: "json";
@@ -79,7 +79,7 @@ composite SampleWatsonIoTApplicationSourceAndSink {
   	() as DeviceEventConsole = Custom(DeviceEventStream as In) { logic onTuple In: { printStringLn("<<<<< received device event: " + (rstring)DeviceEventStream); } }
 
     // decode events received from Watson IoT Platform into tuples
-    stream<rstring eventName, rstring deviceType, rstring deviceId, EventTupleType eventData> EventTupleStream = JSONToTuple(DeviceEventStream) {
+    stream<rstring eventName, rstring deviceId, rstring deviceType, EventTupleType eventData> EventTupleStream = JSONToTuple(DeviceEventStream) {
     param
     inputAttribute: jsonString; 
     targetAttribute: "eventData"; }       

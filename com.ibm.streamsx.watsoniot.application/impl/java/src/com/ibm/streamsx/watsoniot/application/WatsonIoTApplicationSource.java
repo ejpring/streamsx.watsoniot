@@ -17,7 +17,7 @@ import com.ibm.streams.operator.model.OutputPorts;
 import com.ibm.streams.operator.model.Parameter;
 import com.ibm.streams.operator.model.PrimitiveOperator;
 
-import java.io.File;
+import java.io.StringReader;
 
 import java.util.Properties;
 
@@ -134,14 +134,13 @@ class WatsonIoTApplicationSourceProcess implements Runnable {
 
 public class WatsonIoTApplicationSource extends AbstractOperator {
 	
-  @Parameter ( name="applicationCredentials", 
+    @Parameter ( name="applicationCredentials", 
                optional=false, 
-               //cardinality=1, 
-               description="the name of a file containing Watson IoT Platform application credentials" )
-    public void setApplicationCredentials(String filename) { 
-      this.applicationCredentialsFilename = filename;
-      this.applicationCredentials = ApplicationClient.parsePropertiesFile(new File(filename)); }
-    private String applicationCredentialsFilename;
+               description="the contents of a Watson IoT Platform application credentials file (that is, a Java Properties file containing 'key = value' pairs), with newlines replaced by commas" )
+    public void setApplicationCredentials(String credentials) throws Exception { 
+      this.applicationCredentials = new Properties(); 
+      applicationCredentials.load(new StringReader(credentials.replace(',', '\n'))); 
+      System.out.println("******************"+applicationCredentials); }
     private Properties applicationCredentials;
   
   @Parameter ( name="subscriptionDeviceTypes", 
@@ -253,7 +252,7 @@ public class WatsonIoTApplicationSource extends AbstractOperator {
         thread.start();
 
         if (!client.isConnected()) {
-          logger.info("WatsonIoTApplicationSource connecting to Watson IoT Platform with credentials from " + applicationCredentialsFilename);
+          logger.info("WatsonIoTApplicationSource connecting to Watson IoT Platform");
           client.connect(); 
           if (!client.isConnected()) logger.error("WatsonIoTApplicationSource failed to connect"); }
 

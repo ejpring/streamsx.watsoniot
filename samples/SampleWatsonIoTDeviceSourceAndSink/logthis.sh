@@ -10,7 +10,7 @@ set -o pipefail
 
 here=$( cd ${0%/*} ; pwd )
 
-logDirectory=$here/log
+logDirectory=$here/logs
 
 ################################################################################
 

@@ -8,13 +8,15 @@
 #set -o xtrace
 #set -o pipefail
 
+here=$( cd ${0%/*} ; pwd )
+
 namespace=com.ibm.streamsx.watsoniot.sample.device
 composite=SampleWatsonIoTDeviceSourceAndSink
 
-here=$( cd ${0%/*} ; pwd )
+credentialsFilename=$here/WatsonIoTSampleDevice2.credentials.properties
 
 submitParameterList=( 
-    deviceCredentials=$here/WatsonIoTSampleDevice2.credentials
+    deviceCredentials=$( cat $credentialsFilename | tr '\n' ',' | tr -d ' ' )
     eventInterval=1
     timeoutInterval=60
 )

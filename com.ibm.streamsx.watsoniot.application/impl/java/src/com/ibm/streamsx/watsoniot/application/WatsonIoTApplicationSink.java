@@ -18,7 +18,7 @@ import com.ibm.streams.operator.model.Libraries;
 import com.ibm.streams.operator.model.Parameter;
 import com.ibm.streams.operator.model.PrimitiveOperator;
 
-import java.io.File;
+import java.io.StringReader;
 
 import java.util.Properties;
 
@@ -50,13 +50,13 @@ import org.apache.log4j.Logger;
 
 public class WatsonIoTApplicationSink extends AbstractOperator {
 	
-  @Parameter ( name="applicationCredentials", 
+   @Parameter ( name="applicationCredentials", 
                optional=false, 
-               description="the name of a file containing Watson IoT Platform application credentials" )
-    public void setApplicationCredentials(String filename) { 
-      this.applicationCredentialsFilename = filename;
-      this.applicationCredentials = ApplicationClient.parsePropertiesFile(new File(filename)); }
-    private String applicationCredentialsFilename;
+               description="the contents of a Watson IoT Platform application credentials file (that is, a Java Properties file containing 'key = value' pairs), with newlines replaced by commas" )
+    public void setApplicationCredentials(String credentials) throws Exception { 
+      this.applicationCredentials = new Properties(); 
+      applicationCredentials.load(new StringReader(credentials.replace(',', '\n'))); 
+      System.out.println("******************"+applicationCredentials); }
     private Properties applicationCredentials;
   
 	@Parameter ( name="commandName", 
@@ -124,7 +124,7 @@ public class WatsonIoTApplicationSink extends AbstractOperator {
         logger.debug("WatsonIoTApplicationSink.allPortsReady() started");
 
         if (!client.isConnected()) {
-          logger.info("WatsonIoTApplicationSink connecting to Watson IoT Platform with credentials from " + applicationCredentialsFilename);
+          logger.info("WatsonIoTApplicationSink connecting to Watson IoT Platform");
           client.connect(); 
           if (!client.isConnected()) logger.error("WatsonIoTApplicationSink failed to connect"); }
 

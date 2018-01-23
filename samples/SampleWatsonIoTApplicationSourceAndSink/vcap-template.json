@@ -1,0 +1,10 @@
+{
+    "streaming-analytics": [
+	{
+	    "name":
+		"... paste service name here, in quotes ...",
+	    "credentials":	    
+	        ... paste service credentials here, including curly braces ... 
+        }	    	
+    ]
+}

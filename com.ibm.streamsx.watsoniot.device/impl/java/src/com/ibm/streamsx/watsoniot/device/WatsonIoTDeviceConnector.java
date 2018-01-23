@@ -3,7 +3,7 @@
 
 package com.ibm.streamsx.watsoniot.device;
 
-import java.io.File;
+import java.io.StringReader;
 
 import java.util.Properties;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -163,13 +163,13 @@ class WatsonIoTDeviceConnectorProcess implements Runnable {
 
 public class WatsonIoTDeviceConnector extends AbstractOperator {
 	
-	@Parameter ( name="deviceCredentials", 
-                 optional=false, 
-                 description="the name of a file containing Watson IoT Platform device credentials" )
-    public void setDeviceCredentials(String filename) { 
-      this.deviceCredentialsFilename = filename;
-      this.deviceCredentials = DeviceClient.parsePropertiesFile(new File(filename)); }
-    private String deviceCredentialsFilename;
+    @Parameter ( name="deviceCredentials", 
+               optional=false, 
+               description="the contents of a Watson IoT Platform devicecredentials file (that is, a Java Properties file containing 'key = value' pairs), with newlines replaced by commas" )
+    public void setDeviceCredentials(String credentials) throws Exception { 
+      this.deviceCredentials = new Properties(); 
+      deviceCredentials.load(new StringReader(credentials.replace(',', '\n'))); 
+      System.out.println("******************"+deviceCredentials); }
     private Properties deviceCredentials;
 
 	@Parameter ( name="eventName", 
@@ -277,7 +277,7 @@ public class WatsonIoTDeviceConnector extends AbstractOperator {
         if (thread!=null) thread.start();
 
         if (!client.isConnected()) {
-          logger.info("WatsonIoTDeviceConnector connecting to Watson IoT Platform with credentials from " + deviceCredentialsFilename);
+          logger.info("WatsonIoTDeviceConnector connecting to Watson IoT Platform");
           client.connect(); 
           if (!client.isConnected()) logger.error("WatsonIoTDeviceConnector failed to connect"); }
 

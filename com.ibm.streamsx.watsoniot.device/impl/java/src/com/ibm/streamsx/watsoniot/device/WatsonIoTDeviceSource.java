@@ -18,7 +18,7 @@ import com.ibm.streams.operator.model.OutputPorts;
 import com.ibm.streams.operator.model.Parameter;
 import com.ibm.streams.operator.model.PrimitiveOperator;
 
-import java.io.File;
+import java.io.StringReader;
 
 import java.util.Properties;
 
@@ -124,13 +124,13 @@ class WatsonIoTDeviceSourceProcess implements Runnable {
 
 public class WatsonIoTDeviceSource extends AbstractOperator {
 	
-	@Parameter ( name="deviceCredentials", 
-                 optional=false, 
-                 description="the name of a file containing Watson IoT Platform device credentials" )
-    public void setDeviceCredentials(String filename) { 
-      this.deviceCredentialsFilename = filename;
-      this.deviceCredentials = DeviceClient.parsePropertiesFile(new File(filename)); }
-    private String deviceCredentialsFilename;
+    @Parameter ( name="deviceCredentials", 
+               optional=false, 
+               description="the contents of a Watson IoT Platform devicecredentials file (that is, a Java Properties file containing 'key = value' pairs), with newlines replaced by commas" )
+    public void setDeviceCredentials(String credentials) throws Exception { 
+      this.deviceCredentials = new Properties(); 
+      deviceCredentials.load(new StringReader(credentials.replace(',', '\n'))); 
+      System.out.println("******************"+deviceCredentials); }
     private Properties deviceCredentials;
 
 	@Parameter ( name="commandName", 
@@ -206,7 +206,7 @@ public class WatsonIoTDeviceSource extends AbstractOperator {
         thread.start();
 
         if (!client.isConnected()) {
-          logger.info("WatsonIoTDeviceSource connecting to Watson IoT Platform with credentials from " + deviceCredentialsFilename);
+          logger.info("WatsonIoTDeviceSource connecting to Watson IoT Platform");
           client.connect(); 
           if (!client.isConnected()) logger.error("WatsonIoTDeviceSource failed to connect"); }
 
