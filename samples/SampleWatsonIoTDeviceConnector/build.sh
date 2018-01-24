@@ -24,8 +24,8 @@ applicationCompileTimeParameterList=(
 )
 
 streamsToolkitList=(
-    ##########$toolkitDirectory/streamsx.json.toolkits-1.4.3_20171106/com.ibm.streamsx.json
     $STREAMS_INSTALL/toolkits/com.ibm.streamsx.json
+    $here/../SampleWatsonIoTDeviceAnalytic
     $here/../../com.ibm.streamsx.watsoniot.device
 )
 

@@ -113,14 +113,14 @@ class WatsonIoTApplicationSourceProcess implements Runnable {
 /**
  * Class for WatsonIoTApplicationSource operator, which: 
  * <ul>
- * <li>recieves tuples from upstream operators and sends them as commands to devices via the Watson IoT Platform</li>
+ * <li>receives tuples from upstream operators and sends them as commands to devices via the Watson IoT Platform</li>
  * <li>receives events from devices via the Watson IoT Platform and sends them downstream as tuples to other operators.</li>
  * </ul>
  */
 
 @PrimitiveOperator ( name="WatsonIoTApplicationSource", 
                      namespace="com.ibm.streamsx.watsoniot.application", 
-                     description="The WatsonIoTApplicationSource operator connects an SPL graph to the Watson IoT Platform as an IoT 'application': it recieves 'events' from IoT devices and decodes them into output tuples. The operator will recieve all events matching the values specified by the 'subscription' parameters, that is, events matching any of the specified device types, device identifiers, event names, and event formats. The operator requires a file containing 'application credentials' issued by Watson IoT Platform. The credentials must be specified as shown in the 'Using a configuration file' section of the page at 'https://console.bluemix.net/docs/services/IoT/applications/libraries/java.html'. This operator may be used together with the WatsonIoTApplicationSink operator, which sends 'commands' to IoT devices. If so, the pair should specify the same credentials file, and should be fused into the same Streams PE.")
+                     description="The WatsonIoTApplicationSource operator connects an SPL graph to the Watson IoT Platform as an IoT 'application': it receives 'events' from IoT devices and decodes them into output tuples. The operator will receive all events matching the values specified by the 'subscription' parameters, that is, events matching any of the specified device types, device identifiers, event names, and event formats. The operator requires a file containing 'application credentials' issued by Watson IoT Platform. The credentials must be specified as shown in the 'Using a configuration file' section of the page at 'https://console.bluemix.net/docs/services/IoT/applications/libraries/java.html'. This operator may be used together with the WatsonIoTApplicationSink operator, which sends 'commands' to IoT devices. If so, the pair should specify the same credentials file, and should be fused into the same Streams PE.")
 
 @OutputPorts ( {
 	@OutputPortSet ( optional=false, 
@@ -145,49 +145,49 @@ public class WatsonIoTApplicationSource extends AbstractOperator {
   
   @Parameter ( name="subscriptionDeviceTypes", 
                optional=true, 
-               description="output tuples will be produced from events received from these device types, defaulting to '+', meaning all device types" )
+               description="a list of one or more device types from which events will be received, defaulting to '+', meaning all device types" )
   public void setSubscriptionDeviceTypes(String[] subscriptions) { subscriptionDeviceTypes = subscriptions; }
   private String[] subscriptionDeviceTypes = { "+" };
 
   @Parameter ( name="subscriptionDeviceIds", 
                optional=true, 
-               description="output tuples will be produced from events received from these device identifiers, defaulting to '+', meaning all devices" )
+               description="a list of one or more device identifiers from which events will be received, defaulting to '+', meaning all devices" )
   public void setSubscriptionDeviceIds(String[] subscriptions) { subscriptionDeviceIds = subscriptions; }
   private String[] subscriptionDeviceIds = { "+" };
 
   @Parameter ( name="subscriptionEvents", 
                optional=true, 
-               description="output tuples will be produced from events received with these names, defaulting to '+', meaning all names" )
+               description="a list of one or more event names which will be received, defaulting to '+', meaning all names" )
   public void setSubscriptionEvents(String[] subscriptions) { subscriptionEvents = subscriptions; }
   private String[] subscriptionEvents = { "+" };
 
   @Parameter ( name="subscriptionFormats", 
                optional=true, 
-               description="output tuples will be produced from events received in these data formats, defaulting to '+', meaning all formats" )
+               description="a list of one or more data formats in which events will be received, defaulting to '+', meaning all formats" )
   public void setSubscriptionFormats(String[] subscriptions) { subscriptionFormats = subscriptions; }
   private String[] subscriptionFormats = { "+" };
 
 	@Parameter ( name="eventName", 
                  optional=false, 
-                 description="an output attribute of type 'rstring' for the name of the event recieved from a device via the Watson IoT Platform" )
+                 description="an output attribute of type 'rstring' for the name of the event received from a device via the Watson IoT Platform" )
 	public void setEventName(String attribute) { this.eventNameAttribute = attribute; }
 	public String eventNameAttribute;
 	
 	@Parameter ( name="eventData", 
                  optional=false, 
-                 description="an output attribute of type 'rstring' for data recieved with an event from a device via the Watson IoT Platform" )
+                 description="an output attribute of type 'rstring' for data received with an event from a device via the Watson IoT Platform" )
 	public void setEventData(String attribute) { this.eventDataAttribute = attribute; }
 	public String eventDataAttribute;
 	
 	@Parameter ( name="eventFormat", 
                  optional=true, 
-                 description="optionally, an output attribute of type 'rstring' for the format of the data recieved with an event from a device via the Watson IoT Platform, with no default" )
+                 description="optionally, an output attribute of type 'rstring' for the format of the data received with an event from a device via the Watson IoT Platform, with no default" )
 	public void setEventFormat(String attribute) { this.eventFormatAttribute = attribute; }
 	public String eventFormatAttribute = null;
 
 	@Parameter ( name="eventDeviceType", 
                  optional=true, 
-                 description="optionally, an output attribute of type 'rstring' for the type of the device that sent the event recieved via the Watson IoT Platform, with no default" )
+                 description="optionally, an output attribute of type 'rstring' for the type of the device that sent the event received via the Watson IoT Platform, with no default" )
 	public void setEventDeviceType(String attribute) { this.eventDeviceTypeAttribute = attribute; }
 	public String eventDeviceTypeAttribute = null;
 	
@@ -229,7 +229,7 @@ public class WatsonIoTApplicationSource extends AbstractOperator {
       // configure the client to enqueue events to be processed in a separate thread
       client.setEnqueueEvents(WatsonIoTApplicationSourceEvent.class);
 
-      // create a thread for processing events recieved from applications via 
+      // create a thread for processing events received from applications via 
       // Watson IoT Platform by sending them downstream as output tuples
       process = new WatsonIoTApplicationSourceProcess(this, client, logger);
       thread = getOperatorContext().getThreadFactory().newThread(process);

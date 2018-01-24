@@ -1,0 +1,52 @@
+// Copyright (C) 2017  International Business Machines Corporation
+// All Rights Reserved
+
+namespace com.ibm.streamsx.watsoniot.sample.device;
+
+type EventDataType =
+  rstring aString,
+  uint64 anInteger,
+  float64 aFloat,
+  list<float64> aList,
+  map<rstring,int32> aMap;
+
+type EventTupleType = 
+  rstring eventName, 
+  EventDataType eventData;
+
+type CommandDataType =
+  rstring aString,
+  uint64 anInteger,
+  float64 aFloat;
+
+type CommandTupleType = 
+  rstring commandName, 
+  rstring deviceId, 
+  rstring deviceType, 
+  CommandDataType commandData;
+
+composite SampleWatsonIoTDeviceAnalytic ( input stream<CommandTupleType> CommandTupleStream ; output stream<EventTupleType> EventTupleStream ) {
+
+  param
+    expression<rstring> $eventName;
+    expression<float64> $eventInterval;
+
+  graph
+
+    () as CommandTupleSink = Custom(CommandTupleStream) {}
+
+    stream<EventDataType> EventDataStream = Beacon() {
+      param period: $eventInterval;
+      output EventDataStream: 
+        aString = "this is sample event number " + (rstring)IterationCount(),
+        anInteger = IterationCount(),
+        aFloat = getTimestampInSecs(),
+        aList = [ 1.41421, 2.71828, 3.14159 ],
+        aMap = { "one": 1, "two": 2, "three": 3, "many": 2147483647 }; }
+
+    stream<EventTupleType> EventTupleStream = Functor(EventDataStream) {
+      output EventTupleStream:
+      eventName = $eventName,
+      eventData = EventDataStream; }
+
+}

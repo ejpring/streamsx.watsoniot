@@ -1,0 +1,27 @@
+<!--
+Copyright (C) 2017  International Business Machines Corporation
+All Rights Reserved
+-->
+
+<project name="SampleWatsonIoTApplicationAnalytic" default="all" basedir=".">
+
+	<property environment="env" />
+	<property name="streams.install" value="${env.STREAMS_INSTALL}" />
+
+	<target name="all" depends="build" />
+
+	<target name="build" depends="indextoolkit">
+	</target>
+
+	<target name="clean">
+	</target>
+
+	<target name="indextoolkit">
+		<echo message="Toolkit to index: ${basedir}" />
+		<exec executable="${streams.install}/bin/spl-make-toolkit">
+			<arg value="--directory" />
+			<arg value="${basedir}" />
+		</exec>
+	</target>
+
+</project>

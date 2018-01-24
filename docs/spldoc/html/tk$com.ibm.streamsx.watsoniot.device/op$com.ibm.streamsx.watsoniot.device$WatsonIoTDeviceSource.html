@@ -32,7 +32,7 @@
 
 <div class="section">
 
-<p class="p">The WatsonIoTDeviceSource operator connects an SPL graph to the Watson IoT Platform as an IoT 'device': it recieves 'commands' from IoT devices and decodes them into output tuples. The operator requires a file containing 'device credentials' issued by Watson IoT Platform. The credentials must be specified as shown in the 'Using a configuration file' section of the page at 'https://console.bluemix.net/docs/services/IoT/devices/libraries/java.html'. This operator may be used together with the WatsonIoTDeviceSink operator, which sends 'events' to IoT devices. If so, the pair must specify the same credentials file, and must be fused into the same Streams PE.
+<p class="p">The WatsonIoTDeviceSource operator connects an SPL graph to the Watson IoT Platform as an IoT 'device': it receives 'commands' from IoT devices and decodes them into output tuples. The operator requires a file containing 'device credentials' issued by Watson IoT Platform. The credentials must be specified as shown in the 'Using a configuration file' section of the page at 'https://console.bluemix.net/docs/services/IoT/devices/libraries/java.html'. This operator may be used together with the WatsonIoTDeviceSink operator, which sends 'events' to IoT devices. If so, the pair must specify the same credentials file, and must be fused into the same Streams PE.
 </p>
 
 </div>
@@ -161,7 +161,7 @@ This operator supports 4 parameters.
 <dt class="dt dlterm"><a name="spldoc_operator__parameter__comandFormat"><!-- --></a><tt class="ph tt">comandFormat</tt></dt>
 
 <dd class="dd">
-<p class="p">optionally, an output attribute of type 'rstring' for the format of the data recieved from the Watson IoT Platform with a command, with no default
+<p class="p">optionally, an output attribute of type 'rstring' for the format of the data received from the Watson IoT Platform with a command, with no default
 </p>
 <dl class="dl">
 
@@ -192,7 +192,7 @@ This operator supports 4 parameters.
 <dt class="dt dlterm"><a name="spldoc_operator__parameter__commandData"><!-- --></a><tt class="ph tt">commandData</tt></dt>
 
 <dd class="dd">
-<p class="p">an output attribute of type 'rstring' or 'blob' for data recieved from the Watson IoT Platform with a command
+<p class="p">an output attribute of type 'rstring' or 'blob' for data received from the Watson IoT Platform with a command
 </p>
 <dl class="dl">
 
@@ -223,7 +223,7 @@ This operator supports 4 parameters.
 <dt class="dt dlterm"><a name="spldoc_operator__parameter__commandName"><!-- --></a><tt class="ph tt">commandName</tt></dt>
 
 <dd class="dd">
-<p class="p">an output attribute of type 'rstring' for the name of the command recieved from the Watson IoT Platform
+<p class="p">an output attribute of type 'rstring' for the name of the command received from the Watson IoT Platform
 </p>
 <dl class="dl">
 

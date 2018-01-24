@@ -1,0 +1,59 @@
+// Copyright (C) 2017  International Business Machines Corporation
+// All Rights Reserved
+
+namespace com.ibm.streamsx.watsoniot.sample.application;
+
+type EventDataType =
+  rstring aString,
+  uint64 anInteger,
+  float64 aFloat,
+  list<float64> aList,
+  map<rstring,int32> aMap;
+
+type EventTupleType = 
+  rstring eventName, 
+  rstring deviceId, 
+  rstring deviceType, 
+  EventDataType eventData;
+
+type CommandDataType =
+  rstring aString,
+  uint64 anInteger,
+  float64 aFloat;
+
+type CommandTupleType = 
+  rstring commandName, 
+  rstring deviceId, 
+  rstring deviceType, 
+  CommandDataType commandData;
+
+composite SampleWatsonIoTApplicationAnalytic ( input stream<EventTupleType> EventTupleStream ; output stream<CommandTupleType> CommandTupleStream ) {
+
+  param
+    expression<rstring> $commandName;
+    expression<list<rstring>> $deviceIds;
+    expression<rstring> $deviceType;
+    expression<float64> $commandInterval;
+
+  graph
+
+    () as EventTupleSink = Custom(EventTupleStream) {}
+
+    stream<CommandDataType> CommandDataStream = Beacon() {
+      param period: $commandInterval;
+      output CommandDataStream: 
+          aString = "this is sample command number " + (rstring)IterationCount(),
+          anInteger = IterationCount(),
+          aFloat = getTimestampInSecs(); }
+
+    stream<CommandTupleType> CommandTupleStream = Custom(CommandDataStream) {
+      logic onTuple CommandDataStream: {
+        for (rstring deviceId in $deviceIds) { 
+          submit( { commandName = $commandName,
+                    deviceId = deviceId,
+                    deviceType = $deviceType,
+                    commandData = CommandDataStream }, 
+                  CommandTupleStream );
+        } } }
+
+}

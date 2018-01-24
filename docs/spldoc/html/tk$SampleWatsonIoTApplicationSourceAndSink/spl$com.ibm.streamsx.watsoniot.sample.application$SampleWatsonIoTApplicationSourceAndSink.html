@@ -58,7 +58,7 @@
 </div>
 
 <div class="section splgraph">
-  <embed class="image" src="../../image/tk$SampleWatsonIoTApplicationSourceAndSink/op$com.ibm.streamsx.watsoniot.sample.application$SampleWatsonIoTApplicationSourceAndSink.svg" width="347" height="290"/>
+  <embed class="image" src="../../image/tk$SampleWatsonIoTApplicationSourceAndSink/op$com.ibm.streamsx.watsoniot.sample.application$SampleWatsonIoTApplicationSourceAndSink.svg" width="557" height="199"/>
 </div>
 
 <div class="section"><h2 class="title sectiontitle">Parameters</h2>
@@ -67,10 +67,10 @@
 <li class="sli"><strong class="ph b">applicationCredentials</strong>
 </li>
 
-<li class="sli"><strong class="ph b">sampleDeviceType</strong>
+<li class="sli"><strong class="ph b">deviceIds</strong>
 </li>
 
-<li class="sli"><strong class="ph b">sampleDeviceIds</strong>
+<li class="sli"><strong class="ph b">deviceType</strong>
 </li>
 
 <li class="sli"><strong class="ph b">commandInterval</strong>
@@ -102,52 +102,51 @@
  
    param
      expression&lt;rstring&gt; $applicationCredentials: getSubmissionTimeValue("applicationCredentials"); 
-     expression&lt;rstring&gt; $sampleDeviceType: getSubmissionTimeValue("deviceType");
-     expression&lt;list&lt;rstring&gt;&gt; $sampleDeviceIds: getSubmissionTimeListValue("deviceIds");
+     expression&lt;list&lt;rstring&gt;&gt; $deviceIds: getSubmissionTimeListValue("deviceIds");
+     expression&lt;rstring&gt; $deviceType: getSubmissionTimeValue("deviceType");
      expression&lt;float64&gt; $commandInterval: (float64)getSubmissionTimeValue("commandInterval", "10.0" ); // in seconds
      expression&lt;float64&gt; $timeoutInterval: (float64)getSubmissionTimeValue("timeoutInterval", "60.0" ); // in seconds
  
    type
  
-   EventTupleType =
-     rstring aString,
-     uint64 anInteger,
-     float64 aFloat,
-     list&lt;float64&gt; aList,
-     map&lt;rstring,int32&gt; aMap;
+   EventType = 
+     rstring eventName, 
+     rstring deviceId, 
+     rstring deviceType, 
+     rstring jsonString;
  
-   CommandTupleType =
-     rstring aString,
-     uint64 anInteger,
-     float64 aFloat;
+   CommandType = 
+     rstring commandName, 
+     rstring deviceId, 
+     rstring deviceType, 
+     rstring jsonString;
  
    graph
  
+     // the analytics stub
+   	stream&lt;CommandTupleType&gt; CommandTupleStream = SampleWatsonIoTApplicationAnalytic(EventTupleStream) { 
+     param
+       deviceIds: $deviceIds;
+       deviceType: $deviceType;
+       commandName: "sampleCommand";
+       commandInterval: $commandInterval; }
+ 
      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  
-     // generate sample commands
-     stream&lt;CommandTupleType&gt; CommandTupleStream = Beacon() {
-       param period: $commandInterval;
-       output CommandTupleStream: 
-         aString = "this is sample command number " + (rstring)IterationCount(),
-         anInteger = IterationCount(),
-         aFloat = getTimestampInSecs(); }
-   	() as CommandTupleConsole = Custom(CommandTupleStream as In) { logic onTuple In: { printStringLn("command tuple: " + (rstring)CommandTupleStream); } }
- 
-     // encode tuples into commands for Watson IoT Platform
-     stream&lt;rstring commandName, rstring deviceType, rstring deviceId, rstring jsonString&gt; ApplicationCommandStream = Custom(CommandTupleStream) {
+     // encode command data as JSON strings for Watson IoT Platform
+     stream&lt;CommandType&gt; CommandStream = Custom(CommandTupleStream) {
        logic onTuple CommandTupleStream: {
-         for (rstring deviceId in $sampleDeviceIds) { 
-         submit( { commandName = "sampleCommand",
-                   deviceType = $sampleDeviceType,
-                   deviceId = deviceId,
-                   jsonString = tupleToJSON(CommandTupleStream) },
-                 ApplicationCommandStream );
+         for (rstring deviceId in $deviceIds) { 
+         submit( { 
+               commandName = commandName,
+               deviceId = deviceId,
+               deviceType = deviceType,
+               jsonString = tupleToJSON(commandData) }, CommandStream );
          } } }
-   	() as DeviceCommandConsole = Custom(ApplicationCommandStream as In) { logic onTuple In: { printStringLn("&gt;&gt;&gt;&gt;&gt; sending application command: " + (rstring)ApplicationCommandStream); } }
+   	() as CommandConsole = Custom(CommandStream as In) { logic onTuple In: { printStringLn("&gt;&gt;&gt;&gt;&gt; sent command: " + (rstring)CommandStream); } }
  
      // send encoded commands to Watson IoT Platform 
-     () as ApplicationCommandSink = WatsonIoTApplicationSink(ApplicationCommandStream) {
+     () as CommandSink = WatsonIoTApplicationSink(CommandStream) {
        param
        commandName: commandName;
        commandDeviceType: deviceType;
@@ -158,23 +157,22 @@
      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  
      // receive encoded events from Watson IoT Platform
-     stream&lt;rstring eventName, rstring deviceId, rstring deviceType, rstring jsonString&gt; DeviceEventStream = WatsonIoTApplicationSource() {
+     stream&lt;EventType&gt; EventStream = WatsonIoTApplicationSource() {
        param
-       subscriptionDeviceTypes: $sampleDeviceType;
+       subscriptionDeviceTypes: $deviceType;
        subscriptionFormats: "json";
        eventName: "eventName";
        eventDeviceType: "deviceType";
        eventDeviceId: "deviceId";
        eventData: "jsonString";
        applicationCredentials: $applicationCredentials; }
-   	() as DeviceEventConsole = Custom(DeviceEventStream as In) { logic onTuple In: { printStringLn("&lt;&lt;&lt;&lt;&lt; received device event: " + (rstring)DeviceEventStream); } }
+   	() as EventConsole = Custom(EventStream as In) { logic onTuple In: { printStringLn("&lt;&lt;&lt;&lt;&lt; received event: " + (rstring)EventStream); } }
  
-     // decode events received from Watson IoT Platform into tuples
-     stream&lt;rstring eventName, rstring deviceId, rstring deviceType, EventTupleType eventData&gt; EventTupleStream = JSONToTuple(DeviceEventStream) {
+     // decode JSON strings received from Watson IoT Platform into event data
+     stream&lt;EventTupleType&gt; EventTupleStream = JSONToTuple(EventStream) {
      param
      inputAttribute: jsonString; 
      targetAttribute: "eventData"; }       
-   	() as EventTupleConsole = Custom(EventTupleStream as In) { logic onTuple In: { printStringLn("event tuple: " + (rstring)EventTupleStream); } }
  
      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  

@@ -32,7 +32,7 @@
 
 <div class="section">
 
-<p class="p">The WatsonIoTApplicationSource operator connects an SPL graph to the Watson IoT Platform as an IoT 'application': it recieves 'events' from IoT devices and decodes them into output tuples. The operator will recieve all events matching the values specified by the 'subscription' parameters, that is, events matching any of the specified device types, device identifiers, event names, and event formats. The operator requires a file containing 'application credentials' issued by Watson IoT Platform. The credentials must be specified as shown in the 'Using a configuration file' section of the page at 'https://console.bluemix.net/docs/services/IoT/applications/libraries/java.html'. This operator may be used together with the WatsonIoTApplicationSink operator, which sends 'commands' to IoT devices. If so, the pair should specify the same credentials file, and should be fused into the same Streams PE.
+<p class="p">The WatsonIoTApplicationSource operator connects an SPL graph to the Watson IoT Platform as an IoT 'application': it receives 'events' from IoT devices and decodes them into output tuples. The operator will receive all events matching the values specified by the 'subscription' parameters, that is, events matching any of the specified device types, device identifiers, event names, and event formats. The operator requires a file containing 'application credentials' issued by Watson IoT Platform. The credentials must be specified as shown in the 'Using a configuration file' section of the page at 'https://console.bluemix.net/docs/services/IoT/applications/libraries/java.html'. This operator may be used together with the WatsonIoTApplicationSink operator, which sends 'commands' to IoT devices. If so, the pair should specify the same credentials file, and should be fused into the same Streams PE.
 </p>
 
 </div>
@@ -192,7 +192,7 @@ This operator supports 10 parameters.
 <dt class="dt dlterm"><a name="spldoc_operator__parameter__eventData"><!-- --></a><tt class="ph tt">eventData</tt></dt>
 
 <dd class="dd">
-<p class="p">an output attribute of type 'rstring' for data recieved with an event from a device via the Watson IoT Platform
+<p class="p">an output attribute of type 'rstring' for data received with an event from a device via the Watson IoT Platform
 </p>
 <dl class="dl">
 
@@ -254,7 +254,7 @@ This operator supports 10 parameters.
 <dt class="dt dlterm"><a name="spldoc_operator__parameter__eventDeviceType"><!-- --></a><tt class="ph tt">eventDeviceType</tt></dt>
 
 <dd class="dd">
-<p class="p">optionally, an output attribute of type 'rstring' for the type of the device that sent the event recieved via the Watson IoT Platform, with no default
+<p class="p">optionally, an output attribute of type 'rstring' for the type of the device that sent the event received via the Watson IoT Platform, with no default
 </p>
 <dl class="dl">
 
@@ -285,7 +285,7 @@ This operator supports 10 parameters.
 <dt class="dt dlterm"><a name="spldoc_operator__parameter__eventFormat"><!-- --></a><tt class="ph tt">eventFormat</tt></dt>
 
 <dd class="dd">
-<p class="p">optionally, an output attribute of type 'rstring' for the format of the data recieved with an event from a device via the Watson IoT Platform, with no default
+<p class="p">optionally, an output attribute of type 'rstring' for the format of the data received with an event from a device via the Watson IoT Platform, with no default
 </p>
 <dl class="dl">
 
@@ -316,7 +316,7 @@ This operator supports 10 parameters.
 <dt class="dt dlterm"><a name="spldoc_operator__parameter__eventName"><!-- --></a><tt class="ph tt">eventName</tt></dt>
 
 <dd class="dd">
-<p class="p">an output attribute of type 'rstring' for the name of the event recieved from a device via the Watson IoT Platform
+<p class="p">an output attribute of type 'rstring' for the name of the event received from a device via the Watson IoT Platform
 </p>
 <dl class="dl">
 
@@ -347,7 +347,7 @@ This operator supports 10 parameters.
 <dt class="dt dlterm"><a name="spldoc_operator__parameter__subscriptionDeviceIds"><!-- --></a><tt class="ph tt">subscriptionDeviceIds</tt></dt>
 
 <dd class="dd">
-<p class="p">output tuples will be produced from events received from these device identifiers, defaulting to '+', meaning all devices
+<p class="p">a list of one or more device identifiers from which events will be received, defaulting to '+', meaning all devices
 </p>
 <dl class="dl">
 
@@ -375,7 +375,7 @@ This operator supports 10 parameters.
 <dt class="dt dlterm"><a name="spldoc_operator__parameter__subscriptionDeviceTypes"><!-- --></a><tt class="ph tt">subscriptionDeviceTypes</tt></dt>
 
 <dd class="dd">
-<p class="p">output tuples will be produced from events received from these device types, defaulting to '+', meaning all device types
+<p class="p">a list of one or more device types from which events will be received, defaulting to '+', meaning all device types
 </p>
 <dl class="dl">
 
@@ -403,7 +403,7 @@ This operator supports 10 parameters.
 <dt class="dt dlterm"><a name="spldoc_operator__parameter__subscriptionEvents"><!-- --></a><tt class="ph tt">subscriptionEvents</tt></dt>
 
 <dd class="dd">
-<p class="p">output tuples will be produced from events received with these names, defaulting to '+', meaning all names
+<p class="p">a list of one or more event names which will be received, defaulting to '+', meaning all names
 </p>
 <dl class="dl">
 
@@ -431,7 +431,7 @@ This operator supports 10 parameters.
 <dt class="dt dlterm"><a name="spldoc_operator__parameter__subscriptionFormats"><!-- --></a><tt class="ph tt">subscriptionFormats</tt></dt>
 
 <dd class="dd">
-<p class="p">output tuples will be produced from events received in these data formats, defaulting to '+', meaning all formats
+<p class="p">a list of one or more data formats in which events will be received, defaulting to '+', meaning all formats
 </p>
 <dl class="dl">
 

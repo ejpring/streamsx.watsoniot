@@ -152,7 +152,7 @@ class WatsonIoTApplicationConnectorProcess implements Runnable {
 
 @PrimitiveOperator ( name="WatsonIoTApplicationConnector", 
                      namespace="com.ibm.streamsx.watsoniot.application", 
-                     description="The WatsonIoTApplicationConnector operator connects an SPL graph to the Watson IoT Platform as an IoT 'application': it encodes input tuples as 'commands' and sends them to IoT devices; concurrently, it recieves 'events' from IoT devices and decodes them into output tuples. The operator will recieve all events matching the values specified by the 'subscription' parameters, that is, events matching any of the specified device types, device identifiers, event names, and event formats. The operator requires a file containing 'application credentials' issued by Watson IoT Platform. The credentials must be specified as shown in the 'Using a configuration file' section of the page at 'https://console.bluemix.net/docs/services/IoT/applications/libraries/java.html'.")
+                     description="The WatsonIoTApplicationConnector operator connects an SPL graph to the Watson IoT Platform as an IoT 'application': it encodes input tuples as 'commands' and sends them to IoT devices; concurrently, it receives 'events' from IoT devices and decodes them into output tuples. The operator will receive all events matching the values specified by the 'subscription' parameters, that is, events matching any of the specified device types, device identifiers, event names, and event formats. The operator requires a file containing 'application credentials' issued by Watson IoT Platform. The credentials must be specified as shown in the 'Using a configuration file' section of the page at 'https://console.bluemix.net/docs/services/IoT/applications/libraries/java.html'.")
 @InputPorts ( { 
 	@InputPortSet ( optional=false, 
                     cardinality=1, 
@@ -219,49 +219,49 @@ public class WatsonIoTApplicationConnector extends AbstractOperator {
 
   @Parameter ( name="subscriptionDeviceTypes", 
                optional=true, 
-               description="output tuples will be produced from events received from these device types, defaulting to '+', meaning all device types" )
+               description="a list of one or more device types, from which events will be received, defaulting to '+', meaning all device types" )
   public void setSubscriptionDeviceTypes(String[] subscriptions) { subscriptionDeviceTypes = subscriptions; }
   private String[] subscriptionDeviceTypes = { "+" };
 
   @Parameter ( name="subscriptionDeviceIds", 
                optional=true, 
-               description="output tuples will be produced from events received from these device identifiers, defaulting to '+', meaning all devices" )
+               description="a list of one or more device identifiers from which events will be received, defaulting to '+', meaning all devices" )
   public void setSubscriptionDeviceIds(String[] subscriptions) { subscriptionDeviceIds = subscriptions; }
   private String[] subscriptionDeviceIds = { "+" };
 
   @Parameter ( name="subscriptionEvents", 
                optional=true, 
-               description="output tuples will be produced from events receivd with these names, defaulting to '+', meaning all events" )
+               description="a list of one or more event names which will be received, defaulting to '+', meaning all events" )
   public void setSubscriptionEvents(String[] subscriptions) { subscriptionEvents = subscriptions; }
   private String[] subscriptionEvents = { "+" };
 
   @Parameter ( name="subscriptionFormats", 
                optional=true, 
-               description="output tuples will be produced from events received in these data formats, defaulting to '+', meaning all formats" )
+               description="a list of one or more data formats in which events will be received, defaulting to '+', meaning all formats" )
   public void setSubscriptionFormats(String[] subscriptions) { subscriptionFormats = subscriptions; }
   private String[] subscriptionFormats = { "+" };
 
 	@Parameter ( name="eventName", 
                  optional=false, 
-                 description="an output attribute of type 'rstring' for the name of the event recieved from a device via the Watson IoT Platform" )
+                 description="an output attribute of type 'rstring' for the name of the event received from a device via the Watson IoT Platform" )
 	public void setEventName(String attribute) { this.eventNameAttribute = attribute; }
 	public String eventNameAttribute;
 	
 	@Parameter ( name="eventData", 
                  optional=false, 
-                 description="an output attribute of type 'rstring' for data recieved with an event from a device via the Watson IoT Platform" )
+                 description="an output attribute of type 'rstring' for data received with an event from a device via the Watson IoT Platform" )
 	public void setEventData(String attribute) { this.eventDataAttribute = attribute; }
 	public String eventDataAttribute;
 	
 	@Parameter ( name="eventFormat", 
                  optional=true, 
-                 description="optionally, an output attribute of type 'rstring' for the format of the data recieved with an event from a device via the Watson IoT Platform, with no default" )
+                 description="optionally, an output attribute of type 'rstring' for the format of the data received with an event from a device via the Watson IoT Platform, with no default" )
 	public void setEventFormat(String attribute) { this.eventFormatAttribute = attribute; }
 	public String eventFormatAttribute = null;
 
 	@Parameter ( name="eventDeviceType", 
                  optional=true, 
-                 description="optionally, an output attribute of type 'rstring' for the type of the device that sent the event recieved via the Watson IoT Platform, with no default" )
+                 description="optionally, an output attribute of type 'rstring' for the type of the device that sent the event received via the Watson IoT Platform, with no default" )
 	public void setEventDeviceType(String attribute) { this.eventDeviceTypeAttribute = attribute; }
 	public String eventDeviceTypeAttribute = null;
 	
@@ -309,12 +309,12 @@ public class WatsonIoTApplicationConnector extends AbstractOperator {
       client = new ApplicationClient(applicationCredentials);
       
       // create a callback with the Watson IoT device client that will handle
-      // events recieved from applications via Watson IoT Platform by enqueuing them 
+      // events received from applications via Watson IoT Platform by enqueuing them 
       // for processing by a separate thread
       callback = new WatsonIoTApplicationConnectorCallback(queue);
       client.setEventCallback(callback);
       
-      // create a thread for processing events recieved from applications via 
+      // create a thread for processing events received from applications via 
       // Watson IoT Platform by sending them downstream as output tuples
       process = new WatsonIoTApplicationConnectorProcess(this, queue, logger);
       thread = getOperatorContext().getThreadFactory().newThread(process);

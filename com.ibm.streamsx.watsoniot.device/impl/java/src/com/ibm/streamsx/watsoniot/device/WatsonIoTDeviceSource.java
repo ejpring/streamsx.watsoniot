@@ -111,7 +111,7 @@ class WatsonIoTDeviceSourceProcess implements Runnable {
 
 @PrimitiveOperator ( name="WatsonIoTDeviceSource", 
                      namespace="com.ibm.streamsx.watsoniot.device", 
-                     description="The WatsonIoTDeviceSource operator connects an SPL graph to the Watson IoT Platform as an IoT 'device': it recieves 'commands' from IoT devices and decodes them into output tuples. The operator requires a file containing 'device credentials' issued by Watson IoT Platform. The credentials must be specified as shown in the 'Using a configuration file' section of the page at 'https://console.bluemix.net/docs/services/IoT/devices/libraries/java.html'. This operator may be used together with the WatsonIoTDeviceSink operator, which sends 'events' to IoT devices. If so, the pair must specify the same credentials file, and must be fused into the same Streams PE.")
+                     description="The WatsonIoTDeviceSource operator connects an SPL graph to the Watson IoT Platform as an IoT 'device': it receives 'commands' from IoT devices and decodes them into output tuples. The operator requires a file containing 'device credentials' issued by Watson IoT Platform. The credentials must be specified as shown in the 'Using a configuration file' section of the page at 'https://console.bluemix.net/docs/services/IoT/devices/libraries/java.html'. This operator may be used together with the WatsonIoTDeviceSink operator, which sends 'events' to IoT devices. If so, the pair must specify the same credentials file, and must be fused into the same Streams PE.")
 
 @OutputPorts ( {
 	@OutputPortSet ( optional=false, 
@@ -135,19 +135,19 @@ public class WatsonIoTDeviceSource extends AbstractOperator {
 
 	@Parameter ( name="commandName", 
                  optional=false, 
-                 description="an output attribute of type 'rstring' for the name of the command recieved from the Watson IoT Platform" )
+                 description="an output attribute of type 'rstring' for the name of the command received from the Watson IoT Platform" )
 	public void setCommandName(String attribute) { this.commandNameAttribute = attribute; }
 	public String commandNameAttribute;
 	
 	@Parameter ( name="commandData", 
                  optional=false, 
-                 description="an output attribute of type 'rstring' or 'blob' for data recieved from the Watson IoT Platform with a command" )
+                 description="an output attribute of type 'rstring' or 'blob' for data received from the Watson IoT Platform with a command" )
 	public void setCommandData(String attribute) { this.commandDataAttribute = attribute; }
 	public String commandDataAttribute;
 	
 	@Parameter ( name="comandFormat", 
                  optional=true, 
-                 description="optionally, an output attribute of type 'rstring' for the format of the data recieved from the Watson IoT Platform with a command, with no default" )
+                 description="optionally, an output attribute of type 'rstring' for the format of the data received from the Watson IoT Platform with a command, with no default" )
 	public void setCommandFormat(String attribute) { this.commandFormatAttribute = attribute; }
 	public String commandFormatAttribute = null;
 	
@@ -184,7 +184,7 @@ public class WatsonIoTDeviceSource extends AbstractOperator {
       // configure the client to enqueue commands to be processed in a separate thread
       client.setEnqueueCommands(WatsonIoTDeviceSourceCommand.class);
 
-      // create a thread for processing commands recieved from applications via 
+      // create a thread for processing commands received from applications via 
       // Watson IoT Platform by sending them downstream as output tuples
       process = new WatsonIoTDeviceSourceProcess(this, client, logger);
       thread = getOperatorContext().getThreadFactory().newThread(process);

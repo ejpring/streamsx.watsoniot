@@ -29,7 +29,7 @@ import org.apache.log4j.Logger;
 /**
  * Class for WatsonIoTApplicationSink operator, which: 
  * <ul>
- * <li>recieves tuples from upstream operators and sends them as commands to devices via the Watson IoT Platform</li>
+ * <li>receives tuples from upstream operators and sends them as commands to devices via the Watson IoT Platform</li>
  * <li>receives events from devices via the Watson IoT Platform and sends them downstream as tuples to other operators.</li>
  * </ul>
  */

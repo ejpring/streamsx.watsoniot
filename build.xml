@@ -8,7 +8,7 @@
 <project name="streamsx.watsoniot" default="all" basedir=".">
 
 	<description>
-        Build file for streamsx.watsoniot project, built the toolkits and samples.
+        Build file for streamsx.watsoniot project, builds the toolkits and samples.
     </description>
 
 	<property environment="env" />

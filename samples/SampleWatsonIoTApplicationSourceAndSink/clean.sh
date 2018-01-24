@@ -21,7 +21,7 @@ stuff=(
     $here/lib 
     $here/output 
     $here/doc
-    $here/log
+    $here/logs
     $here/toolkit.xml 
     $here/.toolkitList
 )

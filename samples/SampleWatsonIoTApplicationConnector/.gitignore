@@ -2,4 +2,6 @@
 .toolkitList
 output/
 logs/
+
 vcap.json
+*.credentials.properties
