@@ -48,10 +48,10 @@ jobOverlay = {
         {
             'jobConfig': {
                 'submissionParameters': [          
-                    { 'name': 'deviceType', 'value': 'SampleDeviceType' },
-                    { 'name': 'deviceIds', 'value': 'SampleDevice1,SampleDevice2' },
                     { 'name': 'applicationCredentials', 'value': applicationCredentials },
+                    { 'name': 'subscriptionDeviceType', 'value': 'SampleDeviceType' },
                     { 'name': 'commandInterval', 'value': 10 }, # ... in seconds
+                    { 'name': 'deviceInterval', 'value': 60 }, # ... in seconds 
                     { 'name': 'timeoutInterval', 'value': 600 } # ... in seconds 
                     ],
                 'tracing': 'info' # ... or 'error' or 'debug' or 'trace'
