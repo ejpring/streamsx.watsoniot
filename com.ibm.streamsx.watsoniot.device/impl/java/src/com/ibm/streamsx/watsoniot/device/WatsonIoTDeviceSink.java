@@ -3,8 +3,6 @@
 
 package com.ibm.streamsx.watsoniot.device;
 
-import com.ibm.iotf.client.device.DeviceClient;
-
 import com.ibm.streams.operator.AbstractOperator;
 import com.ibm.streams.operator.OperatorContext;
 import com.ibm.streams.operator.StreamingInput;
