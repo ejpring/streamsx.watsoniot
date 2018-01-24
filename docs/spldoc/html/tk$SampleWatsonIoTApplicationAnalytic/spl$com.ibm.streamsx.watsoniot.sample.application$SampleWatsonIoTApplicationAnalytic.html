@@ -80,7 +80,7 @@
 </div>
 
 <div class="section splgraph">
-  <embed class="image" src="../../image/tk$SampleWatsonIoTApplicationAnalytic/op$com.ibm.streamsx.watsoniot.sample.application$SampleWatsonIoTApplicationAnalytic.svg" width="252" height="154"/>
+  <embed class="image" src="../../image/tk$SampleWatsonIoTApplicationAnalytic/op$com.ibm.streamsx.watsoniot.sample.application$SampleWatsonIoTApplicationAnalytic.svg" width="252" height="116"/>
 </div>
 
 <div class="section"><h2 class="title sectiontitle">Parameters</h2>
@@ -89,13 +89,10 @@
 <li class="sli"><strong class="ph b">commandName</strong>
 </li>
 
-<li class="sli"><strong class="ph b">deviceIds</strong>
-</li>
-
-<li class="sli"><strong class="ph b">deviceType</strong>
-</li>
-
 <li class="sli"><strong class="ph b">commandInterval</strong>
+</li>
+
+<li class="sli"><strong class="ph b">deviceInterval</strong>
 </li>
 
 </ul>
@@ -134,13 +131,16 @@
  
    param
      expression&lt;rstring&gt; $commandName;
-     expression&lt;list&lt;rstring&gt;&gt; $deviceIds;
-     expression&lt;rstring&gt; $deviceType;
      expression&lt;float64&gt; $commandInterval;
+     expression&lt;float64&gt; $deviceInterval;
+     
+   type
+       
+     Device = 
+       rstring d,
+       rstring t;
  
    graph
- 
-     () as EventTupleSink = Custom(EventTupleStream) {}
  
      stream&lt;CommandDataType&gt; CommandDataStream = Beacon() {
        param period: $commandInterval;
@@ -149,15 +149,25 @@
            anInteger = IterationCount(),
            aFloat = getTimestampInSecs(); }
  
-     stream&lt;CommandTupleType&gt; CommandTupleStream = Custom(CommandDataStream) {
-       logic onTuple CommandDataStream: {
-         for (rstring deviceId in $deviceIds) { 
-           submit( { commandName = $commandName,
-                     deviceId = deviceId,
-                     deviceType = $deviceType,
-                     commandData = CommandDataStream }, 
-                   CommandTupleStream );
-         } } }
+     stream&lt;CommandTupleType&gt; CommandTupleStream = Custom(EventTupleStream; CommandDataStream) {
+       logic state: { mutable map&lt;Device,float64&gt; devices = {}; }
+       onTuple EventTupleStream: { 
+         float64 now = getTimestampInSecs();
+         Device device = { d=deviceId, t=deviceType };
+         if ( ! ( device in devices ) ) {
+           printStringLn("***** remembering device " + device.d + " of type " + device.t);
+           insertM(devices, device, now);
+           return; }
+         devices[device] = now; }
+       onTuple CommandDataStream: {
+         float64 now = getTimestampInSecs();
+         for (Device device in keys(devices)) {
+           if ( devices[device] &lt; now - $deviceInterval ) { 
+             printStringLn("***** forgetting device " + device.d + " of type " + device.t);
+             removeM(devices, device); 
+             return; }
+           submit( { commandName = $commandName, deviceId = device.d, deviceType = device.t, commandData = CommandDataStream }, CommandTupleStream );
+         } } } 
  
  }
 

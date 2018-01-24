@@ -168,8 +168,7 @@ public class WatsonIoTDeviceConnector extends AbstractOperator {
                description="the contents of a Watson IoT Platform devicecredentials file (that is, a Java Properties file containing 'key = value' pairs), with newlines replaced by commas" )
     public void setDeviceCredentials(String credentials) throws Exception { 
       this.deviceCredentials = new Properties(); 
-      deviceCredentials.load(new StringReader(credentials.replace(',', '\n'))); 
-      System.out.println("******************"+deviceCredentials); }
+      deviceCredentials.load(new StringReader(credentials.replace(',', '\n'))); }
     private Properties deviceCredentials;
 
 	@Parameter ( name="eventName", 

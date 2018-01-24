@@ -16,11 +16,11 @@ composite=SampleWatsonIoTApplicationConnector
 credentialsFilename=$here/WatsonIoTSampleApplication1.credentials.properties
 
 submitParameterList=( 
-    deviceType=SampleDeviceType
-    deviceIds=SampleDevice1,SampleDevice2
+    subscriptionDeviceType=SampleDeviceType
     applicationCredentials=$( cat $credentialsFilename | tr '\n' ',' | tr -d ' ' )
     commandInterval=10
-    timeoutInterval=60
+    deviceInterval=60
+    timeoutInterval=600
 )
 
 traceLevel=3 # ... 0 for off, 1 for error, 2 for warn, 3 for info, 4 for debug, 5 for trace

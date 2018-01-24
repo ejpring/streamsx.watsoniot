@@ -22,8 +22,6 @@ composite SampleWatsonIoTDeviceConnector {
 
   CommandType = 
     rstring commandName, 
-    rstring deviceId, 
-    rstring deviceType, 
     rstring jsonString;
 
   graph
@@ -48,8 +46,6 @@ composite SampleWatsonIoTDeviceConnector {
       eventName: eventName;
       eventData: jsonString;
       commandName: "commandName";
-      //???????????deviceId: "deviceId";
-      //???????????????deviceType: "deviceType";
       commandData: "jsonString";
       deviceCredentials: $deviceCredentials; }
   	() as CommandConsole = Custom(CommandStream as In) { logic onTuple In: { printStringLn("<<<<< received command: " + (rstring)CommandStream); } }

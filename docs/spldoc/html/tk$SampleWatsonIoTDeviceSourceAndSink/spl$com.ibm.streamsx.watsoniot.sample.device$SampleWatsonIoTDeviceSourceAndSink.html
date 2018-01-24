@@ -107,8 +107,6 @@
  
    CommandType = 
      rstring commandName, 
-     rstring deviceId, 
-     rstring deviceType, 
      rstring jsonString;
  
    graph
@@ -140,8 +138,6 @@
      stream&lt;CommandType&gt; CommandStream = WatsonIoTDeviceSource() {
        param
        commandName: "commandName";
-       //?????????deviceId: "deviceId";
-       //?????????????deviceType: "deviceType";
        commandData: "jsonString";
        deviceCredentials: $deviceCredentials; }
    	() as CommandConsole = Custom(CommandStream as In) { logic onTuple In: { printStringLn("&lt;&lt;&lt;&lt;&lt; received command: " + (rstring)CommandStream); } }

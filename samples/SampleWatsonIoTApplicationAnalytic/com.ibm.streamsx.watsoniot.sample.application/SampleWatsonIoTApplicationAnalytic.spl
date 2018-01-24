@@ -31,13 +31,16 @@ composite SampleWatsonIoTApplicationAnalytic ( input stream<EventTupleType> Even
 
   param
     expression<rstring> $commandName;
-    expression<list<rstring>> $deviceIds;
-    expression<rstring> $deviceType;
     expression<float64> $commandInterval;
+    expression<float64> $deviceInterval;
+    
+  type
+      
+    Device = 
+      rstring d,
+      rstring t;
 
   graph
-
-    () as EventTupleSink = Custom(EventTupleStream) {}
 
     stream<CommandDataType> CommandDataStream = Beacon() {
       param period: $commandInterval;
@@ -46,14 +49,24 @@ composite SampleWatsonIoTApplicationAnalytic ( input stream<EventTupleType> Even
           anInteger = IterationCount(),
           aFloat = getTimestampInSecs(); }
 
-    stream<CommandTupleType> CommandTupleStream = Custom(CommandDataStream) {
-      logic onTuple CommandDataStream: {
-        for (rstring deviceId in $deviceIds) { 
-          submit( { commandName = $commandName,
-                    deviceId = deviceId,
-                    deviceType = $deviceType,
-                    commandData = CommandDataStream }, 
-                  CommandTupleStream );
-        } } }
+    stream<CommandTupleType> CommandTupleStream = Custom(EventTupleStream; CommandDataStream) {
+      logic state: { mutable map<Device,float64> devices = {}; }
+      onTuple EventTupleStream: { 
+        float64 now = getTimestampInSecs();
+        Device device = { d=deviceId, t=deviceType };
+        if ( ! ( device in devices ) ) {
+          printStringLn("***** remembering device " + device.d + " of type " + device.t);
+          insertM(devices, device, now);
+          return; }
+        devices[device] = now; }
+      onTuple CommandDataStream: {
+        float64 now = getTimestampInSecs();
+        for (Device device in keys(devices)) {
+          if ( devices[device] < now - $deviceInterval ) { 
+            printStringLn("***** forgetting device " + device.d + " of type " + device.t);
+            removeM(devices, device); 
+            return; }
+          submit( { commandName = $commandName, deviceId = device.d, deviceType = device.t, commandData = CommandDataStream }, CommandTupleStream );
+        } } } 
 
 }

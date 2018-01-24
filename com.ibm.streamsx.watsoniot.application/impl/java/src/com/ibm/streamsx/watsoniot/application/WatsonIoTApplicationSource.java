@@ -32,15 +32,15 @@ class WatsonIoTApplicationSourceEvent {
   public final String deviceId;
   public final byte[] data;
 
-  public WatsonIoTApplicationSourceEvent(String name, String format, String deviceType, String deviceId, byte[] data) {
+  public WatsonIoTApplicationSourceEvent(String name, String deviceId, String deviceType, String format, byte[] data) {
     this.name = name;
-    this.format = format;
-    this.deviceType = deviceType;
     this.deviceId = deviceId;
+    this.deviceType = deviceType;
+    this.format = format;
     this.data = data;
   }
 
-  public String toString() { return "event='" + name + "', format='" + format + "', deviceType='" + deviceType + "', deviceId='" + deviceId + "', data='" + new String(data) + "'"; }
+  public String toString() { return "event='" + name + "', deviceId='" + deviceId + "', deviceType='" + deviceType + "', format='" + format + "', data='" + new String(data) + "'"; }
 } 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -139,8 +139,7 @@ public class WatsonIoTApplicationSource extends AbstractOperator {
                description="the contents of a Watson IoT Platform application credentials file (that is, a Java Properties file containing 'key = value' pairs), with newlines replaced by commas" )
     public void setApplicationCredentials(String credentials) throws Exception { 
       this.applicationCredentials = new Properties(); 
-      applicationCredentials.load(new StringReader(credentials.replace(',', '\n'))); 
-      System.out.println("******************"+applicationCredentials); }
+      applicationCredentials.load(new StringReader(credentials.replace(',', '\n'))); }
     private Properties applicationCredentials;
   
   @Parameter ( name="subscriptionDeviceTypes", 

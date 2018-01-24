@@ -151,7 +151,7 @@ public class WatsonIoTApplicationClient extends ApplicationClient implements Wat
       logger.debug("WatsonIoTApplicationClient.takeEvent() waiting on queue ...");
       Event event = queue.take();
       logger.debug("WatsonIoTApplicationClient.takeEvent() dequeued " + event);
-      Object object = constructor.newInstance(event.getDeviceType(), event.getDeviceId(), event.getEvent(), event.getFormat(), event.getRawPayload());
+      Object object = constructor.newInstance(event.getEvent(), event.getDeviceId(), event.getDeviceType(), event.getFormat(), event.getRawPayload());
       logger.debug("WatsonIoTApplicationClient.takeEvent() returning object of type " + constructor.getName() + " containing " + object);
       return object; 
     } 

@@ -14,6 +14,9 @@ All Rights Reserved
 	</target>
 
 	<target name="clean">
+          <exec executable="/bin/bash">
+            <arg value="${basedir}/clean.sh"/>
+          </exec>
 	</target>
 
 	<target name="indextoolkit">

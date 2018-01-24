@@ -22,8 +22,6 @@ composite SampleWatsonIoTDeviceSourceAndSink {
 
   CommandType = 
     rstring commandName, 
-    rstring deviceId, 
-    rstring deviceType, 
     rstring jsonString;
 
   graph
@@ -55,8 +53,6 @@ composite SampleWatsonIoTDeviceSourceAndSink {
     stream<CommandType> CommandStream = WatsonIoTDeviceSource() {
       param
       commandName: "commandName";
-      //?????????deviceId: "deviceId";
-      //?????????????deviceType: "deviceType";
       commandData: "jsonString";
       deviceCredentials: $deviceCredentials; }
   	() as CommandConsole = Custom(CommandStream as In) { logic onTuple In: { printStringLn("<<<<< received command: " + (rstring)CommandStream); } }
