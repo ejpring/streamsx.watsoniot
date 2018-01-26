@@ -24,15 +24,26 @@ applicationCredentialsFile = './WatsonIoTSampleApplication1.credentials.properti
 def submitJob(service, sabFile, jobOptions):
 
     bundleName = os.path.basename(sabFile)
-    jobURL = service._get_url('jobs_path')
     jobParameters = { 'bundle_id': bundleName }
+
+    if hasattr(service, '_get_url'):
+        jobURL = service._get_url('jobs_path') # for 'streamsx' package version 1.7.x with Cloud version 1 authentication
+        rest_client = service.rest_client
+    elif hasattr(service._delegator, '_get_url'):
+        jobURL = service._delegator._get_url('jobs_path') # for Cloud version 1 authentication
+        rest_client = service._delegator.rest_client
+    elif hasattr(service._delegator, '_v2_rest_url'):
+        jobURL = service._delegator._v2_rest_url + '/jobs/' # not sure this is quite right for Cloud version 2 authentication ..........
+        rest_client = service._delegator.rest_client
+    else:
+        raise ValueError('sorry, not sure how to authenticate Cloud services')
 
     with open(sabFile, 'rb') as bundle:
         jobFiles = [
             ('sab_file', ( bundleName, bundle, 'application/octet-stream' ) ),
             ('job_options', ( 'job_options', json.dumps(jobOptions), 'application/json' ) )
             ]
-        return service.rest_client.session.post(url=jobURL, params=jobParameters, files=jobFiles).json()
+        return rest_client.session.post(url=jobURL, params=jobParameters, files=jobFiles).json()
 
 ####################################################################################################
 
